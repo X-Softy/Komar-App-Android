@@ -1,0 +1,38 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdk 30
+    buildToolsVersion "30.0.3"
+}
+
+dependencies {
+
+    // kotlin
+    api "androidx.core:core-ktx:$rootProject.ext.coreKtx_version"
+
+    // ui
+    api "androidx.appcompat:appcompat:$rootProject.ext.appcompat_version"
+    api "androidx.activity:activity-compose:$rootProject.ext.compose_activity_version"
+    api "androidx.activity:activity-ktx:$rootProject.ext.activity_version"
+
+    // compose
+    api "androidx.compose.ui:ui:$rootProject.ext.compose_version"
+    api "androidx.compose.ui:ui-tooling:$rootProject.ext.compose_version"
+    api "androidx.compose.foundation:foundation:$rootProject.ext.compose_version"
+
+    //material
+    api "com.google.android.material:material:$rootProject.ext.material_version"
+    api "androidx.compose.material:material:$rootProject.ext.compose_version"
+    api "androidx.compose.material:material-icons-core:$rootProject.ext.compose_version"
+    api "androidx.compose.material:material-icons-extended:$rootProject.ext.compose_version"
+
+    //lifecycle
+    api "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.ext.lifecycle_version"
+
+    // testing
+    testImplementation "junit:junit:$rootProject.ext.junit_version"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$rootProject.ext.compose_version"
+}
