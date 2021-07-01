@@ -1,4 +1,4 @@
-package com.example.shared.di
+package com.xsofty.shared.di
 
 import dagger.Module
 import dagger.Provides

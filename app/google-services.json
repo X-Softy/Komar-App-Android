@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "33563753971",
+    "project_id": "komar-app",
+    "storage_bucket": "komar-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33563753971:android:def8e3bb988d9336e16686",
+        "android_client_info": {
+          "package_name": "com.xsofty.komarista"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "33563753971-ue7olgv5f0fgkcovcpmjfh3gp01otaiv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.xsofty.komarista",
+            "certificate_hash": "26800b4005a0a45314240de98c93fd1da66afc6a"
+          }
+        },
+        {
+          "client_id": "33563753971-lk2m6an53m9or2igrep2middk633f7og.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDR0LErp68LuKyzJejGwPNbBFSUS23N9Ig"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "33563753971-lk2m6an53m9or2igrep2middk633f7og.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

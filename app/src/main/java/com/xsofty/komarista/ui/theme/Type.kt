@@ -1,4 +1,4 @@
-package com.example.komarapp.ui.theme
+package com.xsofty.komarista.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

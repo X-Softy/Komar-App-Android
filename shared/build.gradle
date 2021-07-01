@@ -12,26 +12,30 @@ android {
 
 dependencies {
 
-    // kotlin
+    // Kotlin
     api "androidx.core:core-ktx:$rootProject.ext.coreKtx_version"
 
-    // ui
+    // UI
     api "androidx.appcompat:appcompat:$rootProject.ext.appcompat_version"
     api "androidx.activity:activity-compose:$rootProject.ext.compose_activity_version"
     api "androidx.activity:activity-ktx:$rootProject.ext.activity_version"
 
-    // compose
+    // Compose
     api "androidx.compose.ui:ui:$rootProject.ext.compose_version"
     api "androidx.compose.ui:ui-tooling:$rootProject.ext.compose_version"
     api "androidx.compose.foundation:foundation:$rootProject.ext.compose_version"
+    api "androidx.compose.runtime:runtime-livedata:$rootProject.ext.compose_version"
 
-    //material
+    // Material
     api "com.google.android.material:material:$rootProject.ext.material_version"
     api "androidx.compose.material:material:$rootProject.ext.compose_version"
     api "androidx.compose.material:material-icons-core:$rootProject.ext.compose_version"
     api "androidx.compose.material:material-icons-extended:$rootProject.ext.compose_version"
 
-    //lifecycle
+    // Glide
+    api "com.google.accompanist:accompanist-glide:$rootProject.ext.glide_accompanist_version"
+
+    // Lifecycle
     api "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.ext.lifecycle_version"
 
     // Hilt
@@ -40,7 +44,16 @@ dependencies {
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$rootProject.ext.hilt_lifecycle_version"
     kapt "androidx.hilt:hilt-compiler:$rootProject.ext.hilt_lifecycle_version"
 
-    // testing
+    //Firebase
+    api platform("com.google.firebase:firebase-bom:$rootProject.ext.firebase_version")
+    api "com.google.firebase:firebase-auth"
+    api 'com.google.firebase:firebase-analytics-ktx'
+    api "com.google.android.gms:play-services-auth:$rootProject.ext.google_play_services_version"
+
+    // Logging
+    api "com.jakewharton.timber:timber:$rootProject.ext.timber_version"
+
+    // Testing
     testImplementation "junit:junit:$rootProject.ext.junit_version"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$rootProject.ext.compose_version"
 }
