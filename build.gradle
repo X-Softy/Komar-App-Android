@@ -26,6 +26,8 @@ ext {
     firebase_version = "28.1.0"
     google_play_services_version = "19.0.0"
     glide_accompanist_version = "0.13.0"
+    nav_version = "2.3.5"
+    nav_compose_version = "2.4.0-alpha04"
 }
 
 allprojects {

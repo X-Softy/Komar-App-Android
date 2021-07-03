@@ -3,21 +3,24 @@ package com.xsofty.komarista.auth
 import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
+import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.xsofty.komarista.R
-import com.xsofty.komarista.ui.MainActivity
-import timber.log.Timber
+import com.xsofty.komarista.ui.AuthFragment.Companion.RC_SIGN_IN
 
 class AuthHelper(
-    private val context: Activity,
+    private val mainActivity: Activity,
     lifecycleOwner: LifecycleOwner
 ) : LifecycleObserver {
 
@@ -34,7 +37,7 @@ class AuthHelper(
 
     fun signIn() {
         val signInIntent = signInClient.signInIntent
-        context.startActivityForResult(signInIntent, MainActivity.RC_SIGN_IN)
+        mainActivity.startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
     fun signOut() {
@@ -45,30 +48,44 @@ class AuthHelper(
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     private fun onCreate() {
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(context.getString(R.string.default_web_client_id))
-            .requestEmail()
+            .requestIdToken(mainActivity.getString(R.string.default_web_client_id))
+            .requestEmail() //TODO: Remove, need for displaying now
             .build()
 
-        signInClient = GoogleSignIn.getClient(context, gso);
+        signInClient = GoogleSignIn.getClient(mainActivity, gso);
     }
 
-    fun handleSuccessfulSignIn(data: Intent?) {
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private fun tryToSignInAutomatically() {
+        val account = GoogleSignIn.getLastSignedInAccount(mainActivity)
+        if (account == null) {
+            Toast.makeText(mainActivity, "Account is null", Toast.LENGTH_SHORT).show()
+        } else {
+            handleSuccessfulSignIn(account)
+        }
+    }
+
+    fun signInFromIntent(data: Intent?) {
         val completedTask = GoogleSignIn.getSignedInAccountFromIntent(data)
+        val account = completedTask.getResult(ApiException::class.java)
+        handleSuccessfulSignIn(account)
+    }
+
+    // can be called on start automatically
+    private fun handleSuccessfulSignIn(account: GoogleSignInAccount?) {
         try {
-            val account = completedTask.getResult(ApiException::class.java)
             val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
             mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(
-                    context
+                    mainActivity
                 ) { task ->
                     if (task.isSuccessful) {
                         val user = mAuth.currentUser
                         _user.value = user
-                        Toast.makeText(context, "Signed In!", Toast.LENGTH_SHORT).show()
-                        Timber.d("Here %s", user.toString())
+                        Toast.makeText(mainActivity, "Signed In!", Toast.LENGTH_SHORT).show()
                     } else {
                         _user.value = null
-                        Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(mainActivity, "Login Failed", Toast.LENGTH_SHORT).show()
                     }
                 }
         } catch (e: ApiException) {
@@ -77,8 +94,8 @@ class AuthHelper(
     }
 
     companion object {
-        fun get(activity: FragmentActivity): AuthHelper {
-            return AuthHelper(activity, activity)
+        fun get(fragment: Fragment): AuthHelper {
+            return AuthHelper(fragment.requireActivity(), fragment.requireActivity())
         }
     }
 }

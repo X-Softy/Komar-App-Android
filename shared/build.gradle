@@ -32,6 +32,12 @@ dependencies {
     api "androidx.compose.material:material-icons-core:$rootProject.ext.compose_version"
     api "androidx.compose.material:material-icons-extended:$rootProject.ext.compose_version"
 
+    // Navigation
+    api "androidx.navigation:navigation-fragment-ktx:$rootProject.ext.nav_version"
+    api "androidx.navigation:navigation-ui-ktx:$rootProject.ext.nav_version"
+    api "androidx.navigation:navigation-dynamic-features-fragment:$rootProject.ext.nav_version"
+    api "androidx.navigation:navigation-compose:$rootProject.ext.nav_compose_version"
+
     // Glide
     api "com.google.accompanist:accompanist-glide:$rootProject.ext.glide_accompanist_version"
 
