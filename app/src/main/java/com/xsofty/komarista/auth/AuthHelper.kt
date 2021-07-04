@@ -3,8 +3,6 @@ package com.xsofty.komarista.auth
 import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
-import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -12,7 +10,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.Scope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -49,7 +46,7 @@ class AuthHelper(
     private fun onCreate() {
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(mainActivity.getString(R.string.default_web_client_id))
-            .requestEmail() //TODO: Remove, need for displaying now
+            .requestEmail()
             .build()
 
         signInClient = GoogleSignIn.getClient(mainActivity, gso);

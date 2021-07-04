@@ -18,14 +18,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import androidx.navigation.fragment.findNavController
 import com.google.accompanist.glide.rememberGlidePainter
 import com.google.firebase.auth.FirebaseUser
+import com.xsofty.komarista.R
 import com.xsofty.komarista.auth.AuthHelper
-import timber.log.Timber
+import com.xsofty.shared.base.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class AuthFragment : Fragment() {
+class AuthFragment : BaseFragment() {
 
     private lateinit var authHelper: AuthHelper
 
@@ -62,7 +64,8 @@ class AuthFragment : Fragment() {
         ) {
             Image(
                 painter = rememberGlidePainter(
-                    request = account?.photoUrl ?: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
+                    request = account?.photoUrl
+                        ?: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
                 ),
                 contentDescription = ""
             )
@@ -79,6 +82,14 @@ class AuthFragment : Fragment() {
                 enabled = account != null
             ) {
                 Text(text = "Sign Out")
+            }
+            Button(
+                onClick = {
+                    findNavController().navigate(R.id.action_authFragment_to_filter_graph)
+                },
+                enabled = account != null
+            ) {
+                Text(text = "Navigate to filter")
             }
         }
     }

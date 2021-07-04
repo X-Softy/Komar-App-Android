@@ -20,6 +20,10 @@ dependencies {
     api "androidx.activity:activity-compose:$rootProject.ext.compose_activity_version"
     api "androidx.activity:activity-ktx:$rootProject.ext.activity_version"
 
+    // Coroutines
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.ext.coroutines_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.ext.coroutines_version"
+
     // Compose
     api "androidx.compose.ui:ui:$rootProject.ext.compose_version"
     api "androidx.compose.ui:ui-tooling:$rootProject.ext.compose_version"
@@ -50,14 +54,19 @@ dependencies {
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$rootProject.ext.hilt_lifecycle_version"
     kapt "androidx.hilt:hilt-compiler:$rootProject.ext.hilt_lifecycle_version"
 
-    //Firebase
+    // Firebase
     api platform("com.google.firebase:firebase-bom:$rootProject.ext.firebase_version")
     api "com.google.firebase:firebase-auth"
     api 'com.google.firebase:firebase-analytics-ktx'
     api "com.google.android.gms:play-services-auth:$rootProject.ext.google_play_services_version"
 
+    // Retrofit
+    api "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofit_version"
+    api "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofit_version"
+
     // Logging
     api "com.jakewharton.timber:timber:$rootProject.ext.timber_version"
+    api "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.okhttp_version"
 
     // Testing
     testImplementation "junit:junit:$rootProject.ext.junit_version"

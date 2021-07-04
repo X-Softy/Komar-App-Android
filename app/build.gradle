@@ -46,6 +46,7 @@ android {
 }
 
 dependencies {
+    implementation project(':filter')
     implementation project(':shared')
 
     // Hilt

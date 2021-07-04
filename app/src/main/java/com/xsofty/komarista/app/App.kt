@@ -1,7 +1,7 @@
 package com.xsofty.komarista.app
 
 import android.app.Application
-import com.xsofty.komarista.BuildConfig
+import com.xsofty.filter.BuildConfig
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
