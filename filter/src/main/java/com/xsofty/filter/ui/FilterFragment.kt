@@ -9,14 +9,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
+import com.xsofty.filter.domain.model.HelloWorldEntity
 import com.xsofty.shared.base.BaseFragment
+import com.xsofty.shared.model.Result
 
-class FilterFragment: BaseFragment() {
+class FilterFragment : BaseFragment() {
 
     private val viewModel: FilterViewModel by viewModels()
 
@@ -27,14 +31,28 @@ class FilterFragment: BaseFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(text = "In Filter!")
+                val helloWorld by viewModel.helloWorldLiveData.observeAsState()
+                helloWorld?.let {
+                    when (it) {
+                        is Result.Success -> {
+                            FilterLayout(text = it.data?.text)
+                        } else -> {
+                            FilterLayout(text = "Null")
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun FilterLayout(text: String?) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(text = text ?: "")
         }
     }
 }

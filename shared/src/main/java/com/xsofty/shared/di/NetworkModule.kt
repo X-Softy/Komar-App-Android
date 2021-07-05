@@ -20,7 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal object NetworkModule {
 
-    private const val SERVER_URL = "https://europe-west3-komar-app.cloudfunctions.net/api"
+    private const val SERVER_URL = "https://europe-west3-komar-app.cloudfunctions.net/api/"
 
     @Singleton
     @Provides
@@ -35,8 +35,7 @@ internal object NetworkModule {
         if (BuildConfig.DEBUG)
             HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
-            } else
-            null
+            } else null
 
     @Singleton
     @Provides
