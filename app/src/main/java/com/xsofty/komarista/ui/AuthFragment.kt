@@ -24,16 +24,21 @@ import com.google.firebase.auth.FirebaseUser
 import com.xsofty.komarista.R
 import com.xsofty.komarista.auth.AuthHelper
 import com.xsofty.shared.base.BaseFragment
+import com.xsofty.shared.storage.AppPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class AuthFragment : BaseFragment() {
 
     private lateinit var authHelper: AuthHelper
 
+    @Inject
+    lateinit var appPreferences: AppPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        authHelper = AuthHelper.get(this)
+        authHelper = AuthHelper.get(appPreferences, this)
     }
 
     override fun onCreateView(

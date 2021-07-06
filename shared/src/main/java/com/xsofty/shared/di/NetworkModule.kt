@@ -3,6 +3,7 @@ package com.xsofty.shared.di
 import androidx.annotation.Nullable
 import com.xsofty.shared.BuildConfig
 import com.xsofty.shared.network.RequestInterceptor
+import com.xsofty.shared.storage.AppPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +26,9 @@ internal object NetworkModule {
     @Singleton
     @Provides
     @OkHttpRequestInterceptor
-    fun provideRequestInterceptor(): Interceptor = RequestInterceptor()
+    fun provideRequestInterceptor(
+        appPreferences: AppPreferences
+    ): Interceptor = RequestInterceptor(appPreferences)
 
     @Singleton
     @Provides

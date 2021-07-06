@@ -19,7 +19,9 @@ import androidx.fragment.app.viewModels
 import com.xsofty.filter.domain.model.HelloWorldEntity
 import com.xsofty.shared.base.BaseFragment
 import com.xsofty.shared.model.Result
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FilterFragment : BaseFragment() {
 
     private val viewModel: FilterViewModel by viewModels()

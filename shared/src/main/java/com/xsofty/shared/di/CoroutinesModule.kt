@@ -11,8 +11,8 @@ import kotlinx.coroutines.SupervisorJob
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
-@InstallIn(SingletonComponent::class)
 @Module
+@InstallIn(SingletonComponent::class)
 object CoroutinesModule {
 
     @DefaultDispatcher

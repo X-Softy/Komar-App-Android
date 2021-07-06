@@ -15,8 +15,10 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.xsofty.komarista.R
 import com.xsofty.komarista.ui.AuthFragment.Companion.RC_SIGN_IN
+import com.xsofty.shared.storage.AppPreferences
 
 class AuthHelper(
+    private val appPreferences: AppPreferences,
     private val mainActivity: Activity,
     lifecycleOwner: LifecycleOwner
 ) : LifecycleObserver {
@@ -77,9 +79,19 @@ class AuthHelper(
                     mainActivity
                 ) { task ->
                     if (task.isSuccessful) {
-                        val user = mAuth.currentUser
-                        _user.value = user
-                        Toast.makeText(mainActivity, "Signed In!", Toast.LENGTH_SHORT).show()
+                        val user = task.result?.user
+                        user?.getIdToken(true)?.addOnCompleteListener(
+                            mainActivity
+                        ) { idTokenTask ->
+                            if (idTokenTask.isSuccessful) {
+                                val idToken = idTokenTask.result?.token
+                                appPreferences.idToken = idToken
+                                _user.value = user
+                            } else {
+                                _user.value = null
+                                Toast.makeText(mainActivity, "Login Failed", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     } else {
                         _user.value = null
                         Toast.makeText(mainActivity, "Login Failed", Toast.LENGTH_SHORT).show()
@@ -91,8 +103,8 @@ class AuthHelper(
     }
 
     companion object {
-        fun get(fragment: Fragment): AuthHelper {
-            return AuthHelper(fragment.requireActivity(), fragment.requireActivity())
+        fun get(appPreferences: AppPreferences, fragment: Fragment): AuthHelper {
+            return AuthHelper(appPreferences, fragment.requireActivity(), fragment.requireActivity())
         }
     }
 }
