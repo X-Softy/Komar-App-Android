@@ -4,9 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.xsofty.filter.domain.model.HelloWorldEntity
 import com.xsofty.filter.domain.usecase.HelloWorldUseCase
+import com.xsofty.shared.Result
 import com.xsofty.shared.base.BaseViewModel
-import com.xsofty.shared.model.Result
-import com.xsofty.shared.model.updateOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -18,7 +17,7 @@ internal class FilterViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val helloWorldRequestFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
-    private val _helloWorldLiveData = MutableLiveData<Result<HelloWorldEntity?>>()
+    private val _helloWorldLiveData = MutableLiveData<Result<HelloWorldEntity>>()
     val helloWorldLiveData get() = _helloWorldLiveData
 
     init {
@@ -31,7 +30,7 @@ internal class FilterViewModel @Inject constructor(
                     _helloWorldLiveData.value = Result.Loading
                 }
                 .mapLatest {
-                    helloWorldUseCase(Unit)
+                    helloWorldUseCase.invoke()
                 }
                 .collect {
                     _helloWorldLiveData.value = it

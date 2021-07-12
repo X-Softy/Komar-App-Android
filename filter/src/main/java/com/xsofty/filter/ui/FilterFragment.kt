@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -16,9 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
-import com.xsofty.filter.domain.model.HelloWorldEntity
+import com.xsofty.shared.Result
 import com.xsofty.shared.base.BaseFragment
-import com.xsofty.shared.model.Result
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,7 +37,7 @@ class FilterFragment : BaseFragment() {
                 helloWorld?.let {
                     when (it) {
                         is Result.Success -> {
-                            FilterLayout(text = it.data?.text)
+                            FilterLayout(text = it.data.text)
                         } else -> {
                             FilterLayout(text = "Null")
                         }

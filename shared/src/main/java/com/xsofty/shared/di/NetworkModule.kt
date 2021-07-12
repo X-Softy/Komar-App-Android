@@ -3,6 +3,7 @@ package com.xsofty.shared.di
 import androidx.annotation.Nullable
 import com.xsofty.shared.BuildConfig
 import com.xsofty.shared.network.RequestInterceptor
+import com.xsofty.shared.network.response.NetworkResponseAdapterFactory
 import com.xsofty.shared.storage.AppPreferences
 import dagger.Module
 import dagger.Provides
@@ -12,7 +13,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -42,7 +43,8 @@ internal object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideConverterFactory(): GsonConverterFactory = GsonConverterFactory.create()
+    fun provideConverterFactory(): MoshiConverterFactory =
+        MoshiConverterFactory.create().asLenient()
 
     @Singleton
     @Provides
@@ -64,10 +66,11 @@ internal object NetworkModule {
     @Provides
     fun provideRetrofitClient(
         okHttpClient: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory
+        converterFactory: MoshiConverterFactory
     ): Retrofit =
         Retrofit.Builder()
-            .addConverterFactory(gsonConverterFactory)
+            .addCallAdapterFactory(NetworkResponseAdapterFactory())
+            .addConverterFactory(converterFactory)
             .baseUrl(SERVER_URL)
             .client(okHttpClient)
             .build()

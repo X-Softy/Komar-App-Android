@@ -74,29 +74,24 @@ class AuthHelper(
     private fun handleSuccessfulSignIn(account: GoogleSignInAccount?) {
         try {
             val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
-            mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(
-                    mainActivity
-                ) { task ->
-                    if (task.isSuccessful) {
-                        val user = task.result?.user
-                        user?.getIdToken(true)?.addOnCompleteListener(
-                            mainActivity
-                        ) { idTokenTask ->
-                            if (idTokenTask.isSuccessful) {
-                                val idToken = idTokenTask.result?.token
-                                appPreferences.idToken = idToken
-                                _user.value = user
-                            } else {
-                                _user.value = null
-                                Toast.makeText(mainActivity, "Login Failed", Toast.LENGTH_SHORT).show()
-                            }
+            mAuth.signInWithCredential(credential).addOnCompleteListener(mainActivity) { task ->
+                if (task.isSuccessful) {
+                    val user = task.result?.user
+                    user?.getIdToken(true)?.addOnCompleteListener(mainActivity) { idTokenTask ->
+                        if (idTokenTask.isSuccessful) {
+                            val idToken = idTokenTask.result?.token
+                            appPreferences.idToken = idToken
+                            _user.value = user
+                        } else {
+                            _user.value = null
+                            Toast.makeText(mainActivity, "Login Failed", Toast.LENGTH_SHORT).show()
                         }
-                    } else {
-                        _user.value = null
-                        Toast.makeText(mainActivity, "Login Failed", Toast.LENGTH_SHORT).show()
                     }
+                } else {
+                    _user.value = null
+                    Toast.makeText(mainActivity, "Login Failed", Toast.LENGTH_SHORT).show()
                 }
+            }
         } catch (e: ApiException) {
 
         }
@@ -104,7 +99,11 @@ class AuthHelper(
 
     companion object {
         fun get(appPreferences: AppPreferences, fragment: Fragment): AuthHelper {
-            return AuthHelper(appPreferences, fragment.requireActivity(), fragment.requireActivity())
+            return AuthHelper(
+                appPreferences = appPreferences,
+                mainActivity = fragment.requireActivity(),
+                lifecycleOwner = fragment.requireActivity()
+            )
         }
     }
 }
