@@ -11,7 +11,7 @@
         android:name="com.xsofty.komarista.presentation.AuthFragment"
         android:label="AuthFragment" >
         <action
-            android:id="@+id/action_authFragment_to_categories_graph"
+            android:id="@+id/action_to_categories"
             app:destination="@id/categories_graph" />
     </fragment>
 

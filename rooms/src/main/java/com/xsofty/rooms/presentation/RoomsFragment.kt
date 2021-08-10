@@ -1,4 +1,4 @@
-package com.xsofty.categories.presentation
+package com.xsofty.rooms.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,16 +13,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.xsofty.shared.Result
 import com.xsofty.shared.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import com.xsofty.categories.R
 
 @AndroidEntryPoint
-class CategoriesFragment : BaseFragment() {
+class RoomsFragment : BaseFragment() {
 
-    private val viewModel: CategoriesViewModel by viewModels()
+    private val viewModel: RoomsViewModel by viewModels()
+
+    private val args: RoomsFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,14 +32,14 @@ class CategoriesFragment : BaseFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                DisplayCategories()
+                DisplayRooms()
             }
         }
     }
 
     @Composable
-    private fun DisplayCategories() {
-        when (val categories = viewModel.categories.value) {
+    private fun DisplayRooms() {
+        when (val rooms = viewModel.rooms.value) {
             is Result.Success -> {
                 Column(
                     verticalArrangement = Arrangement.Top,
@@ -48,9 +49,9 @@ class CategoriesFragment : BaseFragment() {
                         .fillMaxWidth()
                         .fillMaxHeight(),
                 ) {
-                    for (category in categories.data) {
-                        TextButton(onClick = { navigateToRooms(category.id) }) {
-                            Text(text = category.title)
+                    for (room in rooms.data) {
+                        TextButton(onClick = {  }) {
+                            Text(text = room.title)
                         }
                     }
                 }
@@ -60,11 +61,5 @@ class CategoriesFragment : BaseFragment() {
             Result.Loading -> {
             }
         }
-    }
-
-    private fun navigateToRooms(categoryId: String) {
-        findNavController().navigate(
-            CategoriesFragmentDirections.actionToRooms(categoryId)
-        )
     }
 }

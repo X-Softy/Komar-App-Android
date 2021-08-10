@@ -2,3 +2,4 @@ rootProject.name = "Komar App"
 include ':app'
 include ':shared'
 include ':categories'
+include ':rooms'

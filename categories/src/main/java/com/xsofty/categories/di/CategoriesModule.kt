@@ -17,7 +17,7 @@ object CategoriesModule {
 
     @Singleton
     @Provides
-    fun provideHelloWorldApi(retrofit: Retrofit): CategoriesApi {
+    fun provideCategoriesApi(retrofit: Retrofit): CategoriesApi {
         return retrofit.create(CategoriesApi::class.java)
     }
 }

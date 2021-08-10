@@ -48,14 +48,14 @@ class AuthFragment : BaseFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                authLayout()
+                AuthLayout()
             }
         }
     }
 
     @Preview(showBackground = true)
     @Composable
-    private fun authLayout() {
+    private fun AuthLayout() {
 
         val account: FirebaseUser? by authHelper.user.observeAsState()
 
@@ -90,7 +90,7 @@ class AuthFragment : BaseFragment() {
             }
             Button(
                 onClick = {
-                    findNavController().navigate(R.id.action_authFragment_to_categories_graph)
+                    findNavController().navigate(R.id.action_to_categories)
                 },
                 enabled = account != null
             ) {
