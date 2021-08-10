@@ -14,8 +14,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.xsofty.komarista.R
-import com.xsofty.komarista.ui.AuthFragment.Companion.RC_SIGN_IN
+import com.xsofty.komarista.presentation.AuthFragment.Companion.RC_SIGN_IN
 import com.xsofty.shared.storage.AppPreferences
+import timber.log.Timber
 
 class AuthHelper(
     private val appPreferences: AppPreferences,
@@ -80,6 +81,7 @@ class AuthHelper(
                     user?.getIdToken(true)?.addOnCompleteListener(mainActivity) { idTokenTask ->
                         if (idTokenTask.isSuccessful) {
                             val idToken = idTokenTask.result?.token
+                            Timber.d("Here %s", idToken)
                             appPreferences.idToken = idToken
                             _user.value = user
                         } else {

@@ -1,25 +1,29 @@
 package com.xsofty.shared
 
-import androidx.lifecycle.MutableLiveData
-
-sealed class Result<out R> {
+sealed class Result<out T> {
 
     data class Success<out T>(val data: T) : Result<T>()
-    data class Error(val exception: Throwable? = null, val apiError: ApiError? = null) : Result<Nothing>()
+
+    sealed class Error : Result<Nothing>() {
+        object NetworkError : Error()
+        data class GenericError(val errorResponse: ErrorResponse? = null) : Error()
+    }
+
     object Loading : Result<Nothing>()
 
     override fun toString(): String {
         return when (this) {
             is Success<*> -> "Success[data=$data]"
-            is Error -> "Error[exception=$exception\napiError=$apiError]"
+            is Error.NetworkError -> "NetworkError"
+            is Error.GenericError -> "Error[errorResponse=$errorResponse]"
             Loading -> "Loading"
         }
     }
 }
 
-data class ApiError(
-    val code: Int,
-    val message: String
+data class ErrorResponse(
+    val code: Int? = null,
+    val message: String? = null
 )
 
 /**
@@ -34,12 +38,3 @@ fun <T> Result<T>.successOr(fallback: T): T {
 
 val <T> Result<T>.data: T?
     get() = (this as? Result.Success)?.data
-
-/**
- * Updates value of [liveData] if [Result] is of type [Success]
- */
-inline fun <reified T> Result<T>.updateOnSuccess(liveData: MutableLiveData<T>) {
-    if (this is Result.Success) {
-        liveData.value = data
-    }
-}

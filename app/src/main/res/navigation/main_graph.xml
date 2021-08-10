@@ -4,15 +4,15 @@
     android:id="@+id/main_graph"
     app:startDestination="@id/authFragment">
 
-    <include app:graph="@navigation/filter_graph" />
+    <include app:graph="@navigation/categories_graph" />
 
     <fragment
         android:id="@+id/authFragment"
-        android:name="com.xsofty.komarista.ui.AuthFragment"
+        android:name="com.xsofty.komarista.presentation.AuthFragment"
         android:label="AuthFragment" >
         <action
-            android:id="@+id/action_authFragment_to_filter_graph"
-            app:destination="@id/filter_graph" />
+            android:id="@+id/action_authFragment_to_categories_graph"
+            app:destination="@id/categories_graph" />
     </fragment>
 
 </navigation>

@@ -3,7 +3,6 @@ package com.xsofty.shared.di
 import androidx.annotation.Nullable
 import com.xsofty.shared.BuildConfig
 import com.xsofty.shared.network.RequestInterceptor
-import com.xsofty.shared.network.response.NetworkResponseAdapterFactory
 import com.xsofty.shared.storage.AppPreferences
 import dagger.Module
 import dagger.Provides
@@ -69,7 +68,6 @@ internal object NetworkModule {
         converterFactory: MoshiConverterFactory
     ): Retrofit =
         Retrofit.Builder()
-            .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .addConverterFactory(converterFactory)
             .baseUrl(SERVER_URL)
             .client(okHttpClient)
