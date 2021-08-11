@@ -36,6 +36,11 @@ class CategoriesFragment : BaseFragment() {
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.requestCategories()
+    }
+
     @Composable
     private fun DisplayCategories() {
         when (val categories = viewModel.categories.value) {

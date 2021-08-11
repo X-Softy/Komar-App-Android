@@ -22,7 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class RoomsFragment : BaseFragment() {
 
     private val viewModel: RoomsViewModel by viewModels()
-
     private val args: RoomsFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -35,6 +34,11 @@ class RoomsFragment : BaseFragment() {
                 DisplayRooms()
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.requestRooms(args.categoryId)
     }
 
     @Composable
@@ -50,7 +54,7 @@ class RoomsFragment : BaseFragment() {
                         .fillMaxHeight(),
                 ) {
                     for (room in rooms.data) {
-                        TextButton(onClick = {  }) {
+                        TextButton(onClick = { }) {
                             Text(text = room.title)
                         }
                     }
