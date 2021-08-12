@@ -6,10 +6,18 @@
 
     <fragment
         android:id="@+id/roomsFragment"
-        android:name="com.xsofty.rooms.presentation.RoomsFragment"
-        android:label="roomsFragment" >
+        android:name="com.xsofty.rooms.presentation.rooms.RoomsFragment"
+        android:label="roomsFragment">
+        <deepLink app:uri="komarista://rooms?categoryId={categoryId}" />
         <argument
             android:name="categoryId"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/createRoomFragment"
+        android:name="com.xsofty.rooms.presentation.create.CreateRoomFragment">
+        <deepLink app:uri="komarista://createRoom" />
+    </fragment>
+
 </navigation>

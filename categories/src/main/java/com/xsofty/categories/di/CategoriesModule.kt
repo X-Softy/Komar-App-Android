@@ -1,8 +1,10 @@
 package com.xsofty.categories.di
 
-import com.xsofty.categories.data.network.CategoriesApi
+import com.xsofty.categories.data.network.api.CategoriesApi
 import com.xsofty.categories.data.repository.CategoriesRepositoryImpl
 import com.xsofty.categories.domain.repository.CategoriesRepository
+import com.xsofty.categories.presentation.CategoriesNavImpl
+import com.xsofty.shared.nav.contracts.CategoriesNavContract
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -19,6 +21,12 @@ object CategoriesModule {
     @Provides
     fun provideCategoriesApi(retrofit: Retrofit): CategoriesApi {
         return retrofit.create(CategoriesApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun providesCategoriesNavContract(): CategoriesNavContract {
+        return CategoriesNavImpl()
     }
 }
 

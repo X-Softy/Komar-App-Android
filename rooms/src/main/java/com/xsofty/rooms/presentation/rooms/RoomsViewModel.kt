@@ -1,10 +1,10 @@
-package com.xsofty.rooms.presentation
+package com.xsofty.rooms.presentation.rooms
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.xsofty.rooms.domain.model.RoomEntity
-import com.xsofty.rooms.domain.usecase.GetRoomsUseCase
+import com.xsofty.rooms.domain.usecase.GetRoomsByCategoryUseCase
 import com.xsofty.shared.Result
 import com.xsofty.shared.base.BaseViewModel
 import com.xsofty.shared.ext.handleLoading
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class RoomsViewModel @Inject constructor(
-    private val getRoomsUseCase: GetRoomsUseCase
+    private val getRoomsByCategoryUseCase: GetRoomsByCategoryUseCase
 ) : BaseViewModel() {
 
     private val roomsRequestFlow = MutableSharedFlow<String>(extraBufferCapacity = 1)
@@ -27,7 +27,7 @@ internal class RoomsViewModel @Inject constructor(
         viewModelScope.launch {
             roomsRequestFlow
                 .handleLoading(rooms)
-                .map { categoryId -> getRoomsUseCase(categoryId) }
+                .map { categoryId -> getRoomsByCategoryUseCase(categoryId) }
                 .collect { rooms.value = it }
         }
     }

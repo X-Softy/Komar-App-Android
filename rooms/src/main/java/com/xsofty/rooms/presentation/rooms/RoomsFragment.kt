@@ -1,4 +1,4 @@
-package com.xsofty.rooms.presentation
+package com.xsofty.rooms.presentation.rooms
 
 import android.os.Bundle
 import android.view.LayoutInflater

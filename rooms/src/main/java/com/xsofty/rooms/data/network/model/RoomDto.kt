@@ -1,4 +1,4 @@
-package com.xsofty.rooms.data.network
+package com.xsofty.rooms.data.network.model
 
 import com.squareup.moshi.Json
 import com.xsofty.rooms.domain.model.RoomEntity

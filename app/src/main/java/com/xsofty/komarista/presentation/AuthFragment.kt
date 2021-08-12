@@ -21,9 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.fragment.findNavController
 import com.google.accompanist.glide.rememberGlidePainter
 import com.google.firebase.auth.FirebaseUser
-import com.xsofty.komarista.R
 import com.xsofty.komarista.auth.AuthHelper
 import com.xsofty.shared.base.BaseFragment
+import com.xsofty.shared.nav.contracts.CategoriesNavContract
 import com.xsofty.shared.storage.AppPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -35,6 +35,9 @@ class AuthFragment : BaseFragment() {
 
     @Inject
     lateinit var appPreferences: AppPreferences
+
+    @Inject
+    lateinit var categoriesNavContract: CategoriesNavContract
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,11 +93,11 @@ class AuthFragment : BaseFragment() {
             }
             Button(
                 onClick = {
-                    findNavController().navigate(R.id.action_to_categories)
+                    categoriesNavContract.show(findNavController())
                 },
                 enabled = account != null
             ) {
-                Text(text = "Navigate to categories")
+                Text(text = "Categories")
             }
         }
     }

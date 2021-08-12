@@ -4,18 +4,11 @@
     android:id="@+id/categories_graph"
     app:startDestination="@id/categoriesFragment">
 
-    <include app:graph="@navigation/rooms_graph" />
-
     <fragment
         android:id="@+id/categoriesFragment"
         android:name="com.xsofty.categories.presentation.CategoriesFragment"
         android:label="CategoriesFragment">
-        <action
-            android:id="@+id/action_to_rooms"
-            app:destination="@id/rooms_graph">
-            <argument
-                android:name="categoryId"
-                app:argType="string" />
-        </action>
+        <deepLink app:uri="komarista://categories" />
     </fragment>
+
 </navigation>

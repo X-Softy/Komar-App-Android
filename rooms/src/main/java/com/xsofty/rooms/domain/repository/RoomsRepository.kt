@@ -4,5 +4,5 @@ import com.xsofty.rooms.domain.model.RoomEntity
 import com.xsofty.shared.Result
 
 interface RoomsRepository {
-    suspend fun getRooms(categoryId: String): Result<List<RoomEntity>>
+    suspend fun getRoomsByCategory(categoryId: String): Result<List<RoomEntity>>
 }

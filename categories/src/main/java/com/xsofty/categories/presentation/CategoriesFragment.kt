@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -16,13 +17,21 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.xsofty.shared.Result
 import com.xsofty.shared.base.BaseFragment
+import com.xsofty.shared.nav.contracts.CreateRoomNavContract
+import com.xsofty.shared.nav.contracts.RoomsNavContract
 import dagger.hilt.android.AndroidEntryPoint
-import com.xsofty.categories.R
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategoriesFragment : BaseFragment() {
 
     private val viewModel: CategoriesViewModel by viewModels()
+
+    @Inject
+    lateinit var roomsNavContract: RoomsNavContract
+
+    @Inject
+    lateinit var createRoomNavContract: CreateRoomNavContract
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,6 +67,9 @@ class CategoriesFragment : BaseFragment() {
                             Text(text = category.title)
                         }
                     }
+                    Button(onClick = { navigateToCreateRoom() }) {
+                        Text(text = "Create room")
+                    }
                 }
             }
             is Result.Error -> {
@@ -68,8 +80,10 @@ class CategoriesFragment : BaseFragment() {
     }
 
     private fun navigateToRooms(categoryId: String) {
-        findNavController().navigate(
-            CategoriesFragmentDirections.actionToRooms(categoryId)
-        )
+        roomsNavContract.show(categoryId, findNavController())
+    }
+
+    private fun navigateToCreateRoom() {
+        createRoomNavContract.show(findNavController())
     }
 }
