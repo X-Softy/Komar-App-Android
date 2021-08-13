@@ -12,6 +12,9 @@ interface RoomsApi {
     @GET("rooms/category/{categoryId}")
     suspend fun getRoomsByCategory(@Path("categoryId") categoryId: String): List<RoomDto>
 
+    @GET("rooms/user")
+    suspend fun getMyRooms(): List<RoomDto>
+
     @POST("rooms")
     suspend fun createRoom(@Body params: CreateRoomParams)
 }

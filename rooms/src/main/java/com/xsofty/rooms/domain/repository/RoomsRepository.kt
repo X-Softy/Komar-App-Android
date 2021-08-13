@@ -6,5 +6,6 @@ import com.xsofty.shared.Result
 
 interface RoomsRepository {
     suspend fun getRoomsByCategory(categoryId: String): Result<List<RoomEntity>>
+    suspend fun getMyRooms(): Result<List<RoomEntity>>
     suspend fun createRoom(params: CreateRoomParams): Result<Unit>
 }

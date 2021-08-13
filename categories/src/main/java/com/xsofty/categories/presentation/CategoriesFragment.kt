@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.xsofty.shared.Result
 import com.xsofty.shared.base.BaseFragment
 import com.xsofty.shared.nav.contracts.CreateRoomNavContract
+import com.xsofty.shared.nav.contracts.MyRoomsNavContract
 import com.xsofty.shared.nav.contracts.RoomsNavContract
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -32,6 +33,9 @@ class CategoriesFragment : BaseFragment() {
 
     @Inject
     lateinit var createRoomNavContract: CreateRoomNavContract
+
+    @Inject
+    lateinit var myRoomsNavContract: MyRoomsNavContract
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,6 +71,9 @@ class CategoriesFragment : BaseFragment() {
                             Text(text = category.title)
                         }
                     }
+                    Button(onClick = { navigateToMyRooms() }) {
+                        Text(text = "My rooms")
+                    }
                     Button(onClick = { navigateToCreateRoom() }) {
                         Text(text = "Create room")
                     }
@@ -77,6 +84,10 @@ class CategoriesFragment : BaseFragment() {
             Result.Loading -> {
             }
         }
+    }
+
+    private fun navigateToMyRooms() {
+        myRoomsNavContract.show(findNavController())
     }
 
     private fun navigateToRooms(categoryId: String) {

@@ -4,8 +4,10 @@ import com.xsofty.rooms.data.network.api.RoomsApi
 import com.xsofty.rooms.data.repository.RoomsRepositoryImpl
 import com.xsofty.rooms.domain.repository.RoomsRepository
 import com.xsofty.rooms.presentation.create.CreateRoomNavImpl
+import com.xsofty.rooms.presentation.myrooms.MyRoomsNavImpl
 import com.xsofty.rooms.presentation.rooms.RoomsNavImpl
 import com.xsofty.shared.nav.contracts.CreateRoomNavContract
+import com.xsofty.shared.nav.contracts.MyRoomsNavContract
 import com.xsofty.shared.nav.contracts.RoomsNavContract
 import dagger.Binds
 import dagger.Module
@@ -35,6 +37,12 @@ object RoomsModule {
     @Provides
     fun providesCreateRoomNavContract(): CreateRoomNavContract {
         return CreateRoomNavImpl()
+    }
+
+    @Singleton
+    @Provides
+    fun providesMyRoomsNavContract(): MyRoomsNavContract {
+        return MyRoomsNavImpl()
     }
 }
 

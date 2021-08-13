@@ -1,0 +1,68 @@
+package com.xsofty.rooms.presentation.myrooms
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
+import androidx.fragment.app.viewModels
+import com.xsofty.rooms.presentation.create.CreateRoomViewModel
+import com.xsofty.shared.Result
+import com.xsofty.shared.base.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class MyRoomsFragment : BaseFragment() {
+
+    private val viewModel: MyRoomsViewModel by viewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                DisplayMyRooms()
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.requestMyRooms()
+    }
+
+    @Composable
+    private fun DisplayMyRooms() {
+        when (val rooms = viewModel.myRooms.value) {
+            is Result.Success -> {
+                Column(
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                ) {
+                    for (room in rooms.data) {
+                        TextButton(onClick = { }) {
+                            Text(text = room.title)
+                        }
+                    }
+                }
+            }
+            is Result.Error -> {
+            }
+            Result.Loading -> {
+            }
+        }
+    }
+}

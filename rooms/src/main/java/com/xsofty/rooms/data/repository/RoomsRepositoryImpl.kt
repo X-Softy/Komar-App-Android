@@ -21,6 +21,12 @@ class RoomsRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getMyRooms(): Result<List<RoomEntity>> {
+        return safeApiCall(dispatcher) {
+            api.getMyRooms().map { it.toRoomEntity() }
+        }
+    }
+
     override suspend fun createRoom(params: CreateRoomParams): Result<Unit> {
         return safeApiCall(dispatcher) {
             api.createRoom(params)
