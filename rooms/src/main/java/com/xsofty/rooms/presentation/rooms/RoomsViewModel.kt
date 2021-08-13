@@ -3,7 +3,7 @@ package com.xsofty.rooms.presentation.rooms
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.xsofty.rooms.domain.model.RoomEntity
+import com.xsofty.rooms.domain.model.entity.RoomEntity
 import com.xsofty.rooms.domain.usecase.GetRoomsByCategoryUseCase
 import com.xsofty.shared.Result
 import com.xsofty.shared.base.BaseViewModel

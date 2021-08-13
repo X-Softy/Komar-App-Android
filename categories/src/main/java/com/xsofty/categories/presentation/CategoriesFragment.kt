@@ -60,7 +60,7 @@ class CategoriesFragment : BaseFragment() {
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth()
-                        .fillMaxHeight(),
+                        .fillMaxHeight()
                 ) {
                     for (category in categories.data) {
                         TextButton(onClick = { navigateToRooms(category.id) }) {

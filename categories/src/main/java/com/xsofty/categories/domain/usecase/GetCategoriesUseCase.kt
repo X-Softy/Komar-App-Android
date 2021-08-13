@@ -1,6 +1,6 @@
 package com.xsofty.categories.domain.usecase
 
-import com.xsofty.categories.domain.model.CategoryEntity
+import com.xsofty.categories.domain.model.entity.CategoryEntity
 import com.xsofty.categories.domain.repository.CategoriesRepository
 import com.xsofty.shared.Result
 import javax.inject.Inject

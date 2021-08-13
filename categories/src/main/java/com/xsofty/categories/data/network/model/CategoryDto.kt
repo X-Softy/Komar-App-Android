@@ -1,7 +1,7 @@
 package com.xsofty.categories.data.network.model
 
 import com.squareup.moshi.Json
-import com.xsofty.categories.domain.model.CategoryEntity
+import com.xsofty.categories.domain.model.entity.CategoryEntity
 
 data class CategoryDto(
 

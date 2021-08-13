@@ -1,4 +1,4 @@
-package com.xsofty.rooms.domain.model
+package com.xsofty.rooms.domain.model.entity
 
 data class RoomEntity(
     val id: String,

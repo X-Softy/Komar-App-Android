@@ -1,6 +1,6 @@
 package com.xsofty.rooms.domain.usecase
 
-import com.xsofty.rooms.domain.model.RoomEntity
+import com.xsofty.rooms.domain.model.entity.RoomEntity
 import com.xsofty.rooms.domain.repository.RoomsRepository
 import com.xsofty.shared.Result
 import javax.inject.Inject
