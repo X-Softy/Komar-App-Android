@@ -26,4 +26,14 @@
         <deepLink app:uri="komarista://myRooms" />
     </fragment>
 
+    <fragment
+        android:id="@+id/roomDetailsFragment"
+        android:name="com.xsofty.rooms.presentation.details.RoomDetailsFragment"
+        android:label="roomDetailsFragment">
+        <deepLink app:uri="komarista://roomDetails?roomId={roomId}" />
+        <argument
+            android:name="roomId"
+            app:argType="string" />
+    </fragment>
+
 </navigation>

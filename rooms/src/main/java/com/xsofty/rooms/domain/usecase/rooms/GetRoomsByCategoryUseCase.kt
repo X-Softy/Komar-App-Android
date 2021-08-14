@@ -1,4 +1,4 @@
-package com.xsofty.rooms.domain.usecase
+package com.xsofty.rooms.domain.usecase.rooms
 
 import com.xsofty.rooms.domain.model.entity.RoomEntity
 import com.xsofty.rooms.domain.repository.RoomsRepository

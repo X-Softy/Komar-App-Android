@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.xsofty.categories.domain.model.entity.CategoryEntity
 import com.xsofty.rooms.domain.model.params.CreateRoomParams
 import com.xsofty.categories.domain.usecase.GetCategoriesUseCase
-import com.xsofty.rooms.domain.usecase.CreateRoomUseCase
+import com.xsofty.rooms.domain.usecase.rooms.CreateRoomUseCase
 import com.xsofty.shared.Result
 import com.xsofty.shared.base.BaseViewModel
 import com.xsofty.shared.ext.handleLoading
@@ -48,7 +48,15 @@ class CreateRoomViewModel @Inject constructor(
         categoriesRequestFlow.tryEmit(Unit)
     }
 
-    fun createRoom(params: CreateRoomParams) {
-        createRoomRequestFlow.tryEmit(params)
+    fun createRoom(
+        categoryId: String,
+        title: String,
+        description: String
+    ) {
+        createRoomRequestFlow.tryEmit(
+            CreateRoomParams(
+                categoryId, title, description
+            )
+        )
     }
 }

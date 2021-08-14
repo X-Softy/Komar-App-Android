@@ -84,11 +84,9 @@ class CreateRoomFragment : BaseFragment() {
             Button(
                 onClick = {
                     viewModel.createRoom(
-                        CreateRoomParams(
-                            categoryId = chosenCategoryId,
-                            title = titleText,
-                            description = descriptionText
-                        )
+                        categoryId = chosenCategoryId,
+                        title = titleText,
+                        description = descriptionText
                     )
                 },
                 enabled = chosenCategoryId.isNotBlank() && titleText.isNotBlank() && descriptionText.isNotBlank()
@@ -96,13 +94,10 @@ class CreateRoomFragment : BaseFragment() {
                 Text(text = "Create Room")
             }
 
+            // move to function
             when (viewModel.createRoomStatus.value) {
-                is Result.Success -> {
-                    displayToast("Room created Successfully!")
-                }
-                is Result.Error -> {
-                    displayToast("Error in room creation")
-                }
+                is Result.Success -> displayToast("Room created Successfully!")
+                is Result.Error -> displayToast("Error in room creation")
                 Result.Loading -> {
                 }
             }

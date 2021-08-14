@@ -13,8 +13,7 @@ data class CategoryDto(
 ) {
     fun toCategoryEntity(): CategoryEntity {
         return CategoryEntity(
-            id = id,
-            title = title
+            id, title
         )
     }
 }

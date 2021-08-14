@@ -13,15 +13,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.xsofty.rooms.presentation.create.CreateRoomViewModel
 import com.xsofty.shared.Result
 import com.xsofty.shared.base.BaseFragment
+import com.xsofty.shared.nav.contracts.MyRoomsNavContract
+import com.xsofty.shared.nav.contracts.RoomDetailsNavContract
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyRoomsFragment : BaseFragment() {
 
     private val viewModel: MyRoomsViewModel by viewModels()
+
+    @Inject
+    lateinit var roomDetailsNavContract: RoomDetailsNavContract
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +60,7 @@ class MyRoomsFragment : BaseFragment() {
                         .fillMaxHeight(),
                 ) {
                     for (room in rooms.data) {
-                        TextButton(onClick = { }) {
+                        TextButton(onClick = { navigateToRoomDetails(room.id) }) {
                             Text(text = room.title)
                         }
                     }
@@ -64,5 +71,9 @@ class MyRoomsFragment : BaseFragment() {
             Result.Loading -> {
             }
         }
+    }
+
+    private fun navigateToRoomDetails(roomId: String) {
+        roomDetailsNavContract.show(roomId, findNavController())
     }
 }

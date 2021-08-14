@@ -5,5 +5,6 @@ object DeepLinkHandler {
     const val CATEGORIES = "${PREFIX}categories"
     const val ROOMS = "${PREFIX}rooms"
     const val MY_ROOMS = "${PREFIX}myRooms"
+    const val ROOM_DETAILS = "${PREFIX}roomDetails"
     const val CREATE_ROOM = "${PREFIX}createRoom"
 }

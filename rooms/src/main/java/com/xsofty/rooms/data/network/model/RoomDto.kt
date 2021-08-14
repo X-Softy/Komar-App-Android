@@ -13,8 +13,7 @@ data class RoomDto(
 ) {
     fun toRoomEntity(): RoomEntity {
         return RoomEntity(
-            id = id,
-            title = title
+            id, title
         )
     }
 }
