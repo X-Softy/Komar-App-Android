@@ -9,12 +9,12 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.xsofty.komarista.presentation.splash.SplashFragment"
+        android:name="com.xsofty.auth.presentation.splash.SplashFragment"
         android:label="Splash" />
 
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.xsofty.komarista.presentation.signin.SignInFragment"
+        android:name="com.xsofty.auth.presentation.sign_in.SignInFragment"
         android:label="Sign In">
         <deepLink app:uri="komarista://signIn" />
     </fragment>

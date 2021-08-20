@@ -1,4 +1,4 @@
-package com.xsofty.komarista.auth
+package com.xsofty.auth.helper
 
 import android.app.Activity
 import android.content.Intent
@@ -9,7 +9,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.xsofty.komarista.R
+import com.xsofty.auth.R
 import com.xsofty.shared.storage.AppPreferences
 
 class FirebaseAuthHelper(
@@ -21,7 +21,7 @@ class FirebaseAuthHelper(
 
     private var signInOptions: GoogleSignInOptions =
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(activity.getString(R.string.default_web_client_id))
+            .requestIdToken(appPreferences.firebaseWebClientId)
             .requestEmail()
             .build()
 

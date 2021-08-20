@@ -1,4 +1,4 @@
-package com.xsofty.komarista.presentation.signin
+package com.xsofty.auth.presentation.sign_in
 
 import android.app.Activity
 import android.content.Intent
@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import com.xsofty.komarista.auth.AuthResultListener
-import com.xsofty.komarista.auth.FirebaseAuthHelper
-import com.xsofty.komarista.auth.FirebaseAuthHelper.Companion.RC_SIGN_IN
+import com.xsofty.auth.helper.AuthResultListener
+import com.xsofty.auth.helper.FirebaseAuthHelper
+import com.xsofty.auth.helper.FirebaseAuthHelper.Companion.RC_SIGN_IN
 import com.xsofty.shared.storage.AppPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

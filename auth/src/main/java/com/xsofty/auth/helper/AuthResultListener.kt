@@ -1,4 +1,4 @@
-package com.xsofty.komarista.auth
+package com.xsofty.auth.helper
 
 interface AuthResultListener {
     fun onAuthSucceeded()

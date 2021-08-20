@@ -1,4 +1,4 @@
-package com.xsofty.komarista.presentation.signin
+package com.xsofty.auth.presentation.sign_in
 
 import androidx.core.net.toUri
 import androidx.navigation.NavController

@@ -14,8 +14,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
-import com.xsofty.komarista.auth.AuthResultListener
-import com.xsofty.komarista.auth.FirebaseAuthHelper
+import com.xsofty.auth.helper.AuthResultListener
+import com.xsofty.auth.helper.FirebaseAuthHelper
 import com.xsofty.shared.nav.CustomBackPressable
 import com.xsofty.shared.nav.BottomNavigationHandler
 import com.xsofty.shared.nav.contracts.CategoriesNavContract
@@ -43,6 +43,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationHandler, AuthResultLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        appPreferences.firebaseWebClientId = getString(R.string.default_web_client_id)
 
         FirebaseApp.initializeApp(this)
         authHelper = FirebaseAuthHelper(this, appPreferences)

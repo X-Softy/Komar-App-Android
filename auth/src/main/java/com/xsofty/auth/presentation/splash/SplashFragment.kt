@@ -1,4 +1,4 @@
-package com.xsofty.komarista.presentation.splash
+package com.xsofty.auth.presentation.splash
 
 import android.os.Bundle
 import android.view.LayoutInflater
