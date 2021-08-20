@@ -17,11 +17,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.xsofty.rooms.domain.model.entity.CommentEntity
 import com.xsofty.shared.Result
-import com.xsofty.shared.base.BaseFragment
+import com.xsofty.shared.base.NestedFragment
+import com.xsofty.shared.ext.displayToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RoomDetailsFragment : BaseFragment() {
+class RoomDetailsFragment : NestedFragment() {
 
     private val viewModel: RoomDetailsViewModel by viewModels()
     private val args: RoomDetailsFragmentArgs by navArgs()

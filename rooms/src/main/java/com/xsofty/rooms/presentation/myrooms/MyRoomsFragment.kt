@@ -12,23 +12,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.xsofty.rooms.presentation.create.CreateRoomViewModel
 import com.xsofty.shared.Result
-import com.xsofty.shared.base.BaseFragment
-import com.xsofty.shared.nav.contracts.MyRoomsNavContract
+import com.xsofty.shared.nav.CustomBackPressable
 import com.xsofty.shared.nav.contracts.RoomDetailsNavContract
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MyRoomsFragment : BaseFragment() {
+class MyRoomsFragment : Fragment(), CustomBackPressable {
 
     private val viewModel: MyRoomsViewModel by viewModels()
 
     @Inject
     lateinit var roomDetailsNavContract: RoomDetailsNavContract
+
+    override fun onBackPressed() {
+        requireActivity().finish()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -2,12 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rooms_graph"
-    app:startDestination="@id/roomsFragment">
+    app:startDestination="@id/myRoomsFragment">
 
     <fragment
         android:id="@+id/roomsFragment"
         android:name="com.xsofty.rooms.presentation.rooms.RoomsFragment"
-        android:label="roomsFragment">
+        android:label="Rooms">
         <deepLink app:uri="komarista://rooms?categoryId={categoryId}" />
         <argument
             android:name="categoryId"
@@ -16,20 +16,22 @@
 
     <fragment
         android:id="@+id/createRoomFragment"
-        android:name="com.xsofty.rooms.presentation.create.CreateRoomFragment">
+        android:name="com.xsofty.rooms.presentation.create.CreateRoomFragment"
+        android:label="Create Room">
         <deepLink app:uri="komarista://createRoom" />
     </fragment>
 
     <fragment
         android:id="@+id/myRoomsFragment"
-        android:name="com.xsofty.rooms.presentation.myrooms.MyRoomsFragment">
+        android:name="com.xsofty.rooms.presentation.myrooms.MyRoomsFragment"
+        android:label="My Rooms">
         <deepLink app:uri="komarista://myRooms" />
     </fragment>
 
     <fragment
         android:id="@+id/roomDetailsFragment"
         android:name="com.xsofty.rooms.presentation.details.RoomDetailsFragment"
-        android:label="roomDetailsFragment">
+        android:label="Room Details">
         <deepLink app:uri="komarista://roomDetails?roomId={roomId}" />
         <argument
             android:name="roomId"

@@ -16,13 +16,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.xsofty.shared.Result
-import com.xsofty.shared.base.BaseFragment
+import com.xsofty.shared.base.NestedFragment
 import com.xsofty.shared.nav.contracts.RoomDetailsNavContract
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RoomsFragment : BaseFragment() {
+class RoomsFragment : NestedFragment() {
 
     private val viewModel: RoomsViewModel by viewModels()
     private val args: RoomsFragmentArgs by navArgs()

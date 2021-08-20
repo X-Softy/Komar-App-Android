@@ -15,16 +15,17 @@
         android:theme="@style/Theme.Komarista">
 
         <activity
-            android:name="com.xsofty.komarista.presentation.MainActivity"
+            android:name="com.xsofty.komarista.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Komarista.NoActionBar">
+            android:theme="@style/Theme.Komarista">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
     </application>

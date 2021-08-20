@@ -15,13 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
-import com.xsofty.rooms.domain.model.params.CreateRoomParams
 import com.xsofty.shared.Result
-import com.xsofty.shared.base.BaseFragment
+import com.xsofty.shared.base.NestedFragment
+import com.xsofty.shared.ext.displayToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CreateRoomFragment : BaseFragment() {
+class CreateRoomFragment : NestedFragment() {
 
     private val viewModel: CreateRoomViewModel by viewModels()
 

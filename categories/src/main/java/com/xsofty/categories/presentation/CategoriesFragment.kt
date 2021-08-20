@@ -1,5 +1,6 @@
 package com.xsofty.categories.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.xsofty.shared.Result
-import com.xsofty.shared.base.BaseFragment
+import com.xsofty.shared.nav.CustomBackPressable
+import com.xsofty.shared.nav.BottomNavigationHandler
 import com.xsofty.shared.nav.contracts.CreateRoomNavContract
 import com.xsofty.shared.nav.contracts.MyRoomsNavContract
 import com.xsofty.shared.nav.contracts.RoomsNavContract
@@ -24,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CategoriesFragment : BaseFragment() {
+class CategoriesFragment : Fragment(), CustomBackPressable {
 
     private val viewModel: CategoriesViewModel by viewModels()
 
@@ -36,6 +39,15 @@ class CategoriesFragment : BaseFragment() {
 
     @Inject
     lateinit var myRoomsNavContract: MyRoomsNavContract
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity() as BottomNavigationHandler).showNavigation()
+    }
+
+    override fun onBackPressed() {
+        requireActivity().finish()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

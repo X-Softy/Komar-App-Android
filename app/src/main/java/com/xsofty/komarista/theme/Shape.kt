@@ -1,4 +1,4 @@
-package com.xsofty.komarista.presentation.theme
+package com.xsofty.komarista.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

@@ -2,15 +2,21 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_graph"
-    app:startDestination="@id/authFragment">
+    app:startDestination="@id/splashFragment">
 
     <include app:graph="@navigation/categories_graph" />
     <include app:graph="@navigation/rooms_graph" />
 
     <fragment
-        android:id="@+id/authFragment"
-        android:name="com.xsofty.komarista.presentation.AuthFragment"
-        android:label="AuthFragment">
+        android:id="@+id/splashFragment"
+        android:name="com.xsofty.komarista.presentation.splash.SplashFragment"
+        android:label="Splash" />
+
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.xsofty.komarista.presentation.signin.SignInFragment"
+        android:label="Sign In">
+        <deepLink app:uri="komarista://signIn" />
     </fragment>
 
 </navigation>
