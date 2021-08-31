@@ -14,14 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.xsofty.shared.Result
-import com.xsofty.shared.base.NestedFragment
 import com.xsofty.shared.ext.displayToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CreateRoomFragment : NestedFragment() {
+class CreateRoomFragment : Fragment() {
 
     private val viewModel: CreateRoomViewModel by viewModels()
 

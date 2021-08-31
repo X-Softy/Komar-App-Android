@@ -1,6 +1,5 @@
 package com.xsofty.categories.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +18,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.xsofty.shared.Result
 import com.xsofty.shared.nav.CustomBackPressable
-import com.xsofty.shared.nav.BottomNavigationHandler
 import com.xsofty.shared.nav.contracts.CreateRoomNavContract
 import com.xsofty.shared.nav.contracts.MyRoomsNavContract
 import com.xsofty.shared.nav.contracts.RoomsNavContract
@@ -39,11 +37,6 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
 
     @Inject
     lateinit var myRoomsNavContract: MyRoomsNavContract
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity() as BottomNavigationHandler).showNavigation()
-    }
 
     override fun onBackPressed() {
         requireActivity().finish()

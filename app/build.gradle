@@ -46,7 +46,6 @@ android {
 }
 
 dependencies {
-    implementation project(':auth')
     implementation project(':categories')
     implementation project(':rooms')
     implementation project(':shared')

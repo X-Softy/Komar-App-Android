@@ -1,7 +1,6 @@
 package com.xsofty.rooms.data.repository
 
 import com.xsofty.rooms.data.network.api.RoomDetailsApi
-import com.xsofty.rooms.data.network.api.RoomsApi
 import com.xsofty.rooms.domain.model.entity.RoomDetailsEntity
 import com.xsofty.rooms.domain.model.params.AddCommentParams
 import com.xsofty.rooms.domain.repository.RoomDetailsRepository

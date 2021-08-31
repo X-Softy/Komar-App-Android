@@ -1,4 +1,4 @@
-package com.xsofty.auth.helper
+package com.xsofty.komarista.helper
 
 import android.app.Activity
 import android.content.Intent
@@ -9,8 +9,9 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.xsofty.auth.R
+import com.xsofty.komarista.R
 import com.xsofty.shared.storage.AppPreferences
+import javax.inject.Inject
 
 class FirebaseAuthHelper(
     private val activity: Activity,
@@ -21,15 +22,11 @@ class FirebaseAuthHelper(
 
     private var signInOptions: GoogleSignInOptions =
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(appPreferences.firebaseWebClientId)
+            .requestIdToken(activity.getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
     private val googleSignInClient = GoogleSignIn.getClient(activity, signInOptions)
-
-    fun isUserSignedIn(): Boolean {
-        return mAuth.currentUser != null
-    }
 
     fun fireSignInIntent() {
         activity.startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
@@ -44,13 +41,14 @@ class FirebaseAuthHelper(
         val account = completedTask.getResult(ApiException::class.java)
         try {
             val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
-            mAuth.signInWithCredential(credential).addOnCompleteListener(activity) { signInTask ->
-                if (signInTask.isSuccessful) {
-                    fetchIdToken(signInTask)
-                } else {
-                    sendErrorCallback()
+            mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(activity) { signInTask ->
+                    if (signInTask.isSuccessful) {
+                        fetchIdToken(signInTask)
+                    } else {
+                        sendErrorCallback()
+                    }
                 }
-            }
         } catch (e: ApiException) {
             sendErrorCallback()
         }

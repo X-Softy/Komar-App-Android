@@ -1,11 +1,8 @@
 package com.xsofty.rooms.di
 
 import com.xsofty.rooms.data.network.api.RoomDetailsApi
-import com.xsofty.rooms.data.network.api.RoomsApi
 import com.xsofty.rooms.data.repository.RoomDetailsRepositoryImpl
-import com.xsofty.rooms.data.repository.RoomsRepositoryImpl
 import com.xsofty.rooms.domain.repository.RoomDetailsRepository
-import com.xsofty.rooms.domain.repository.RoomsRepository
 import com.xsofty.rooms.presentation.details.RoomDetailsNavImpl
 import com.xsofty.shared.nav.contracts.RoomDetailsNavContract
 import dagger.Binds

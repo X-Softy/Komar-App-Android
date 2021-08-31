@@ -1,8 +1,8 @@
 package com.xsofty.rooms.data.repository
 
-import com.xsofty.rooms.domain.model.params.CreateRoomParams
 import com.xsofty.rooms.data.network.api.RoomsApi
 import com.xsofty.rooms.domain.model.entity.RoomEntity
+import com.xsofty.rooms.domain.model.params.CreateRoomParams
 import com.xsofty.rooms.domain.repository.RoomsRepository
 import com.xsofty.shared.Result
 import com.xsofty.shared.di.CoroutinesModule.IoDispatcher

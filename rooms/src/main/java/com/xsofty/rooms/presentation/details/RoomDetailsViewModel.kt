@@ -5,10 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.xsofty.rooms.domain.model.entity.RoomDetailsEntity
 import com.xsofty.rooms.domain.model.params.AddCommentParams
-import com.xsofty.rooms.domain.usecase.details.status.RoomDetailsStatusUseCase
-import com.xsofty.rooms.domain.usecase.details.*
+import com.xsofty.rooms.domain.usecase.details.AddCommentUseCase
+import com.xsofty.rooms.domain.usecase.details.GetRoomDetailsUseCase
 import com.xsofty.rooms.domain.usecase.details.status.DeleteRoomUseCase
 import com.xsofty.rooms.domain.usecase.details.status.JoinRoomUseCase
+import com.xsofty.rooms.domain.usecase.details.status.RoomDetailsStatusUseCase
 import com.xsofty.rooms.domain.usecase.details.status.UnjoinRoomUseCase
 import com.xsofty.shared.Result
 import com.xsofty.shared.base.BaseViewModel

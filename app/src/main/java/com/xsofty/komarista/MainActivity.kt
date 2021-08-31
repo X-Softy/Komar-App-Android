@@ -1,67 +1,80 @@
 package com.xsofty.komarista
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
-import com.xsofty.auth.helper.AuthResultListener
-import com.xsofty.auth.helper.FirebaseAuthHelper
+import com.xsofty.komarista.helper.AuthResultListener
+import com.xsofty.komarista.helper.FirebaseAuthHelper
+import com.xsofty.komarista.helper.FirebaseAuthHelper.Companion.RC_SIGN_IN
 import com.xsofty.shared.nav.CustomBackPressable
-import com.xsofty.shared.nav.BottomNavigationHandler
 import com.xsofty.shared.nav.contracts.CategoriesNavContract
-import com.xsofty.shared.nav.contracts.SignInNavContract
 import com.xsofty.shared.storage.AppPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), BottomNavigationHandler, AuthResultListener {
+class MainActivity : AppCompatActivity(), AuthResultListener {
 
     @Inject
     lateinit var appPreferences: AppPreferences
 
-    @Inject
-    lateinit var signInNavContract: SignInNavContract
+    private val authHelper by lazy {
+        FirebaseAuthHelper(this, appPreferences)
+    }
 
     @Inject
     lateinit var categoriesNavContract: CategoriesNavContract
 
     private lateinit var bottomNavView: BottomNavigationView
 
-    private lateinit var authHelper: FirebaseAuthHelper
+    private val navController by lazy { findNavController(R.id.nav_host) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        appPreferences.firebaseWebClientId = getString(R.string.default_web_client_id)
-
         FirebaseApp.initializeApp(this)
-        authHelper = FirebaseAuthHelper(this, appPreferences)
         setupNavigation()
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (authHelper.isUserSignedIn()) {
-                navigateToCategories()
-            } else {
-                navigateToSignIn()
-            }
-        }, 2000L)
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            if (authHelper.isUserSignedIn()) {
+//                navigateToCategories()
+//            } else {
+//                navigateToSignIn()
+//            }
+//        }, SPLASH_SCREEN_TIME)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        authHelper.signOut()
     }
 
     private fun setupNavigation() {
         bottomNavView = findViewById(R.id.bottom_nav_view)
-        bottomNavView.setupWithNavController(getNavController())
+        bottomNavView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.signInFragment,
+                R.id.roomDetailsFragment,
+                R.id.createRoomFragment -> {
+                    bottomNavView.visibility = View.GONE
+                }
+                else -> {
+                    bottomNavView.visibility = View.VISIBLE
+                }
+            }
+        }
 
         val appBarConfiguration = AppBarConfiguration(
             topLevelDestinationIds = setOf(
@@ -73,7 +86,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationHandler, AuthResultLis
                 R.id.roomDetailsFragment
             )
         )
-        setupActionBarWithNavController(getNavController(), appBarConfiguration)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+    }
+
+    override fun fireSignInIntent() {
+        authHelper.fireSignInIntent()
     }
 
     override fun onAuthSucceeded() {
@@ -81,40 +98,32 @@ class MainActivity : AppCompatActivity(), BottomNavigationHandler, AuthResultLis
     }
 
     override fun onAuthFailed() {
-        // TODO: Show auth Error
+        TODO("Not yet implemented")
     }
 
     override fun onBackPressed() {
         (getDisplayedFragment() as? CustomBackPressable)?.onBackPressed() ?: super.onBackPressed()
     }
 
-    override fun showNavigation() {
-        bottomNavView.visibility = View.VISIBLE
-    }
-
-    override fun hideNavigation() {
-        bottomNavView.visibility = View.GONE
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        getDisplayedFragment()?.onActivityResult(requestCode, resultCode, data)
-    }
 
-    private fun navigateToSignIn() {
-        signInNavContract.show(getNavController())
+        if (resultCode == Activity.RESULT_CANCELED) {
+            onAuthFailed()
+            return
+        }
+
+        if (requestCode == RC_SIGN_IN) {
+            authHelper.handleSignInIntent(data)
+        }
     }
 
     private fun navigateToCategories() {
-        categoriesNavContract.show(getNavController())
-    }
-
-    private fun getNavController(): NavController {
-        return Navigation.findNavController(this, R.id.fragment_container)
+        categoriesNavContract.show(navController)
     }
 
     private fun getDisplayedFragment(): Fragment? {
-        val fragmentContainer = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        val fragmentContainer = supportFragmentManager.findFragmentById(R.id.nav_host)
         return fragmentContainer?.childFragmentManager?.fragments?.first()
     }
 }
