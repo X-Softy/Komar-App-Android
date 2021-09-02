@@ -34,7 +34,7 @@ dependencies {
 
     // Compose
     api "androidx.compose.ui:ui:$rootProject.ext.compose_version"
-    api "androidx.compose.ui:ui-tooling:$rootProject.ext.compose_version"
+    api "androidx.compose.ui:ui-tooling:1.0.0-rc01"
     api "androidx.compose.foundation:foundation:$rootProject.ext.compose_version"
     api "androidx.compose.runtime:runtime-livedata:$rootProject.ext.compose_version"
 

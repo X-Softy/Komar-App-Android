@@ -1,4 +1,4 @@
-package com.xsofty.komarista.theme
+package com.xsofty.shared.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

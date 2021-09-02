@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Komarista</string>
+    <string name="button_sign_in_idle">Continue with Google</string>
+    <string name="button_sign_in_pressed">Signing in with Google</string>
 </resources>

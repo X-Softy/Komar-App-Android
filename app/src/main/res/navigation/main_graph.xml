@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.xsofty.komarista.presentation.auth.SignInFragment"
+        android:name="com.xsofty.komarista.presentation.SignInFragment"
         android:label="Sign In" />
 
 </navigation>
