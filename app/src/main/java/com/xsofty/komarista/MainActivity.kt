@@ -44,14 +44,6 @@ class MainActivity : AppCompatActivity(), AuthResultListener {
 
         FirebaseApp.initializeApp(this)
         setupNavigation()
-
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            if (authHelper.isUserSignedIn()) {
-//                navigateToCategories()
-//            } else {
-//                navigateToSignIn()
-//            }
-//        }, SPLASH_SCREEN_TIME)
     }
 
     override fun onDestroy() {

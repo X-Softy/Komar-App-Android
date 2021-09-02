@@ -74,7 +74,6 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
     private fun CategoriesView() {
         when (val categories = viewModel.categories.value) {
             is Result.Success -> {
-                Timber.d("Here %s", categories.data)
                 CategoriesContent(categories.data)
             }
             is Result.Error -> {

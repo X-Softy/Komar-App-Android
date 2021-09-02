@@ -5,16 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.xsofty.rooms.domain.model.entity.RoomEntity
+import com.xsofty.rooms.presentation.compose.RoomListItem
 import com.xsofty.shared.Result
 import com.xsofty.shared.nav.CustomBackPressable
 import com.xsofty.shared.nav.contracts.RoomDetailsNavContract
@@ -40,7 +41,7 @@ class MyRoomsFragment : Fragment(), CustomBackPressable {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                DisplayMyRooms()
+                MyRoomsView()
             }
         }
     }
@@ -51,27 +52,31 @@ class MyRoomsFragment : Fragment(), CustomBackPressable {
     }
 
     @Composable
-    private fun DisplayMyRooms() {
+    private fun MyRoomsView() {
         when (val rooms = viewModel.myRooms.value) {
             is Result.Success -> {
-                Column(
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                ) {
-                    for (room in rooms.data) {
-                        TextButton(onClick = { navigateToRoomDetails(room.id) }) {
-                            Text(text = room.title)
-                        }
-                    }
-                }
+                MyRoomsContent(rooms.data)
             }
             is Result.Error -> {
             }
             Result.Loading -> {
+            }
+        }
+    }
+
+    @Composable
+    private fun MyRoomsContent(rooms: List<RoomEntity>) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
+            items(rooms) {
+                RoomListItem(room = it) { room ->
+                    navigateToRoomDetails(room.id)
+                }
             }
         }
     }

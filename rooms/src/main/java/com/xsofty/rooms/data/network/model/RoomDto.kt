@@ -9,11 +9,14 @@ data class RoomDto(
     val id: String,
 
     @field:Json(name = "title")
-    val title: String
+    val title: String,
+
+    @field:Json(name = "description")
+    val description: String
 ) {
     fun toRoomEntity(): RoomEntity {
         return RoomEntity(
-            id, title
+            id, title, description
         )
     }
 }
