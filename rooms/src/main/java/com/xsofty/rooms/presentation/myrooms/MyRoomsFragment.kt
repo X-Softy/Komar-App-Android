@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import com.xsofty.rooms.domain.model.entity.RoomEntity
 import com.xsofty.rooms.presentation.compose.RoomListItem
 import com.xsofty.shared.Result
+import com.xsofty.shared.compose.NavBarSpacer
 import com.xsofty.shared.nav.CustomBackPressable
 import com.xsofty.shared.nav.contracts.CreateRoomNavContract
 import com.xsofty.shared.nav.contracts.RoomDetailsNavContract
@@ -97,9 +96,13 @@ class MyRoomsFragment : Fragment(), CustomBackPressable {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                items(rooms) {
-                    RoomListItem(room = it) { room ->
-                        navigateToRoomDetails(room.id)
+                items(rooms.size + 1) { index ->
+                    if (index < rooms.size) {
+                        RoomListItem(room = rooms[index]) { room ->
+                            navigateToRoomDetails(room.id)
+                        }
+                    } else {
+                        Spacer(modifier = Modifier.fillMaxWidth().height(54.dp))
                     }
                 }
             }

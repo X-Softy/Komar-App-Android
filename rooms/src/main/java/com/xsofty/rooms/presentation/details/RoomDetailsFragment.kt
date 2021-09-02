@@ -99,7 +99,6 @@ class RoomDetailsFragment : Fragment() {
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
-                .fillMaxHeight()
         ) {
             CategoryWithButton(roomDetails.category, roomDetails.userStatus) { status ->
                 when (status) {
@@ -243,7 +242,8 @@ class RoomDetailsFragment : Fragment() {
         onCommentAdded: (String) -> Unit
     ) {
         Column(
-            modifier = Modifier,
+            modifier = Modifier
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
@@ -256,39 +256,32 @@ class RoomDetailsFragment : Fragment() {
             when (val comments = viewModel.comments.value) {
                 is Result.Success -> {
                     if (comments.data.isNotEmpty()) {
-                        CommentList(comments.data)
+                        LazyColumn(
+                            modifier = Modifier
+                                //.fillMaxWidth()
+                                //.fillMaxHeight()
+                                .background(
+                                    color = Color.LightGray,
+                                    shape = RoundedCornerShape(16.dp)
+                                )
+                                .border(
+                                    width = 2.dp,
+                                    color = Color.DarkGray,
+                                    shape = RoundedCornerShape(16.dp)
+                                )
+                        ) {
+                            items(comments.data) {
+                                CommentListItem(it)
+                            }
+                        }
                     }
                 }
                 is Result.Error -> {
 
                 }
             }
-
             CommentTextField { commentText ->
                 onCommentAdded(commentText)
-            }
-        }
-    }
-
-    @Composable
-    private fun CommentList(
-        comments: List<CommentEntity>
-    ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = Color.LightGray,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .border(
-                    width = 2.dp,
-                    color = Color.DarkGray,
-                    shape = RoundedCornerShape(16.dp)
-                )
-        ) {
-            items(comments) {
-                CommentListItem(it)
             }
         }
     }
