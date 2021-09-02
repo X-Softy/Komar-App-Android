@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">rooms</string>
+    <string name="room_description">Description</string>
+    <string name="room_comments">Comments</string>
+    <string name="room_delete">Delete</string>
+    <string name="room_join">Join</string>
+    <string name="room_unjoin">Unjoin</string>
 </resources>

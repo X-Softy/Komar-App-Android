@@ -44,6 +44,7 @@ class FirebaseAuthHelper(
             mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(activity) { signInTask ->
                     if (signInTask.isSuccessful) {
+                        saveUserId(mAuth.currentUser?.email)
                         fetchIdToken(signInTask)
                     } else {
                         sendErrorCallback()
@@ -64,6 +65,10 @@ class FirebaseAuthHelper(
                 sendErrorCallback()
             }
         }
+    }
+
+    private fun saveUserId(userId: String?) {
+        appPreferences.userId = userId
     }
 
     private fun saveIdToken(idToken: String?) {

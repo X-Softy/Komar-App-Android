@@ -58,8 +58,9 @@ class MainActivity : AppCompatActivity(), AuthResultListener {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.signInFragment,
-                R.id.roomDetailsFragment,
-                R.id.createRoomFragment -> {
+                R.id.roomsFragment,
+                R.id.createRoomFragment,
+                R.id.roomDetailsFragment -> {
                     bottomNavView.visibility = View.GONE
                 }
                 else -> {

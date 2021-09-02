@@ -1,7 +1,9 @@
 package com.xsofty.rooms.data.network.model
 
 import com.squareup.moshi.Json
+import com.xsofty.categories.domain.model.entity.CategoryEntity
 import com.xsofty.rooms.domain.model.entity.RoomDetailsEntity
+import com.xsofty.rooms.domain.model.entity.UserStatus
 
 data class RoomDetailsDto(
 
@@ -26,15 +28,17 @@ data class RoomDetailsDto(
     @field:Json(name = "joinedUserIds")
     val joinedUserIds: List<String>
 ) {
-    fun toRoomDetailsEntity(): RoomDetailsEntity {
+    fun toRoomDetailsEntity(category: CategoryEntity, userId: String): RoomDetailsEntity {
         return RoomDetailsEntity(
             id,
             title,
             description,
-            categoryId,
-            creatorId,
-            comments.map { it.toCommentEntity() },
-            joinedUserIds
+            category,
+            when {
+                userId == creatorId -> UserStatus.CREATOR
+                joinedUserIds.contains(userId) -> UserStatus.JOINED
+                else -> UserStatus.NOT_JOINED
+            }
         )
     }
 }

@@ -32,7 +32,7 @@ class CreateRoomFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                DisplayCreateRoom()
+                CreateRoomView()
             }
         }
     }
@@ -43,7 +43,7 @@ class CreateRoomFragment : Fragment() {
     }
 
     @Composable
-    private fun DisplayCreateRoom() {
+    private fun CreateRoomView() {
         var titleText by remember { mutableStateOf("") }
         var descriptionText by remember { mutableStateOf("") }
         var chosenCategoryId by remember { mutableStateOf("") }

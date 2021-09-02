@@ -85,16 +85,18 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
 
     @Composable
     private fun CategoriesContent(categories: List<CategoryEntity>) {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            items(categories) {
-                CategoryListItem(category = it) { category ->
-                    navigateToRooms(category.id)
+        Column {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            ) {
+                items(categories) {
+                    CategoryListItem(category = it) { category ->
+                        navigateToRooms(category.id)
+                    }
                 }
             }
         }
