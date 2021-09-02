@@ -51,10 +51,8 @@ private fun SignInView(
     onSignInButtonClicked: () -> Unit
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        contentAlignment = Alignment.BottomCenter
+        contentAlignment = Alignment.BottomCenter,
+        modifier = Modifier.fillMaxSize()
     ) {
         Image(
             painter = painterResource(id = R.drawable.smoke_pink),
@@ -73,9 +71,8 @@ private fun SignInView(
     }
 }
 
-@Preview
 @Composable
-fun SignInButton(
+private fun SignInButton(
     onButtonClick: () -> Unit = {}
 ) {
     val buttonTextIdle = stringResource(R.string.button_sign_in_idle)

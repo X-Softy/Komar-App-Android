@@ -9,11 +9,14 @@ data class CategoryDto(
     val id: String,
 
     @field:Json(name = "title")
-    val title: String
+    val title: String,
+
+    @field:Json(name = "imageId")
+    var imageId: String
 ) {
     fun toCategoryEntity(): CategoryEntity {
         return CategoryEntity(
-            id, title
+            id, title, imageId
         )
     }
 }

@@ -1,6 +1,9 @@
 package com.xsofty.categories.data.repository
 
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.xsofty.categories.data.network.api.CategoriesApi
+import com.xsofty.categories.data.network.model.CategoryDto
 import com.xsofty.categories.domain.model.entity.CategoryEntity
 import com.xsofty.categories.domain.repository.CategoriesRepository
 import com.xsofty.shared.Result
@@ -16,7 +19,9 @@ internal class CategoriesRepositoryImpl @Inject constructor(
 
     override suspend fun getCategories(): Result<List<CategoryEntity>> {
         return safeApiCall(dispatcher) {
-            api.getCategories().map { it.toCategoryEntity() }
+            api.getCategories().map {
+                it.toCategoryEntity()
+            }
         }
     }
 }

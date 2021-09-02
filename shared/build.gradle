@@ -27,6 +27,7 @@ dependencies {
     api "androidx.appcompat:appcompat:$rootProject.ext.appcompat_version"
     api "androidx.activity:activity-compose:$rootProject.ext.compose_activity_version"
     api "androidx.activity:activity-ktx:$rootProject.ext.activity_version"
+    api "io.coil-kt:coil-compose:$rootProject.ext.coil_version"
 
     // Coroutines
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.ext.coroutines_version"
@@ -66,6 +67,7 @@ dependencies {
     api platform("com.google.firebase:firebase-bom:$rootProject.ext.firebase_version")
     api "com.google.firebase:firebase-auth"
     api 'com.google.firebase:firebase-analytics-ktx'
+    api 'com.google.firebase:firebase-storage-ktx'
     api "com.google.android.gms:play-services-auth:$rootProject.ext.google_play_services_version"
 
     // Retrofit
