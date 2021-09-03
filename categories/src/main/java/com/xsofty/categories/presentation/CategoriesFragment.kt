@@ -22,7 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
@@ -31,10 +31,13 @@ import androidx.navigation.fragment.findNavController
 import coil.compose.rememberImagePainter
 import com.xsofty.categories.domain.model.entity.CategoryEntity
 import com.xsofty.shared.Result
+import com.xsofty.shared.compose.Loader
 import com.xsofty.shared.compose.NavBarSpacer
 import com.xsofty.shared.firebase.FirebaseStorageManager
 import com.xsofty.shared.nav.CustomBackPressable
 import com.xsofty.shared.nav.contracts.RoomsNavContract
+import com.xsofty.shared.theme.ColorType
+import com.xsofty.shared.theme.ThemeManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -46,6 +49,9 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
 
     @Inject
     lateinit var roomsNavContract: RoomsNavContract
+
+    @Inject
+    lateinit var themeManager: ThemeManager
 
     override fun onBackPressed() {
         requireActivity().finish()
@@ -74,9 +80,10 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
             is Result.Success -> {
                 CategoriesContent(categories.data)
             }
-            is Result.Error -> {
-            }
             Result.Loading -> {
+                Loader()
+            }
+            is Result.Error -> {
             }
         }
     }
@@ -86,6 +93,7 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
+                .padding(top = 16.dp)
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
                 .fillMaxHeight()
@@ -96,17 +104,16 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
                         navigateToRooms(category.id)
                     }
                 } else {
-                    Spacer(modifier = Modifier.fillMaxWidth().height(54.dp))
+                    NavBarSpacer()
                 }
             }
         }
     }
 
-    @Preview
     @Composable
     private fun CategoryListItem(
-        category: CategoryEntity = CategoryEntity("", "Category", ""),
-        onCategoryClicked: (CategoryEntity) -> Unit = {}
+        category: CategoryEntity,
+        onCategoryClicked: (CategoryEntity) -> Unit
     ) {
         val categoryImageUrl: MutableState<String?> = remember { mutableStateOf(null) }
         firebaseStorageManager.imageIdToUrl(category.imageId) { fetchedImageUrl ->
@@ -117,14 +124,14 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
             contentAlignment = Alignment.BottomCenter,
             modifier = Modifier
                 .background(
-                    color = Color.Blue,
+                    color = Color.Black,
                     shape = RoundedCornerShape(16.dp)
                 )
                 .height(160.dp)
                 .fillMaxWidth()
                 .border(
                     width = 1.dp,
-                    color = Color.Magenta,
+                    color = themeManager.getColor(colorType = ColorType.SECONDARY),
                     shape = RoundedCornerShape(16.dp)
                 )
                 .clickable {
@@ -146,7 +153,7 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
                     .fillMaxWidth()
                     .height(44.dp)
                     .background(
-                        color = Color.Green,
+                        color = themeManager.getColor(colorType = ColorType.PRIMARY),
                         shape = RoundedCornerShape(
                             topStart = 0.dp, topEnd = 0.dp,
                             bottomStart = 16.dp, bottomEnd = 16.dp
@@ -161,7 +168,6 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
                 )
                 Text(
                     text = category.title,
-                    color = Color.DarkGray,
                     fontSize = 20.sp,
                 )
             }

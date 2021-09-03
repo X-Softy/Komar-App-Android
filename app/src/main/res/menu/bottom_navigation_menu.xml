@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/categories_graph"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/categories"
         android:title="Categories" />
     <item
         android:id="@+id/rooms_graph"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/favorite"
         android:title="My Rooms" />
 </menu>

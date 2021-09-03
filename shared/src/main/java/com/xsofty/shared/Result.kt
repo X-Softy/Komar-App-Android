@@ -4,18 +4,14 @@ sealed class Result<out T> {
 
     data class Success<out T>(val data: T) : Result<T>()
 
-    sealed class Error : Result<Nothing>() {
-        object NetworkError : Error()
-        data class GenericError(val errorResponse: ErrorResponse? = null) : Error()
-    }
+    data class Error(val errorResponse: ErrorResponse? = null): Result<Nothing>()
 
     object Loading : Result<Nothing>()
 
     override fun toString(): String {
         return when (this) {
             is Success<*> -> "Success[data=$data]"
-            is Error.NetworkError -> "NetworkError"
-            is Error.GenericError -> "Error[errorResponse=$errorResponse]"
+            is Error -> "Error[errorResponse=$errorResponse]"
             Loading -> "Loading"
         }
     }

@@ -3,7 +3,7 @@ package com.xsofty.rooms.data.network.model
 import com.squareup.moshi.Json
 import com.xsofty.categories.domain.model.entity.CategoryEntity
 import com.xsofty.rooms.domain.model.entity.RoomDetailsEntity
-import com.xsofty.rooms.domain.model.entity.UserStatus
+import com.xsofty.rooms.domain.model.entity.RoomStatus
 
 data class RoomDetailsDto(
 
@@ -35,9 +35,9 @@ data class RoomDetailsDto(
             description,
             category,
             when {
-                userId == creatorId -> UserStatus.CREATOR
-                joinedUserIds.contains(userId) -> UserStatus.JOINED
-                else -> UserStatus.NOT_JOINED
+                userId == creatorId -> RoomStatus.CREATOR
+                joinedUserIds.contains(userId) -> RoomStatus.JOINED
+                else -> RoomStatus.NOT_JOINED
             }
         )
     }

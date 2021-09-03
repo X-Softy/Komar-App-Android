@@ -4,26 +4,36 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.TextField
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import coil.compose.rememberImagePainter
+import com.xsofty.categories.domain.model.entity.CategoryEntity
 import com.xsofty.shared.Result
-import com.xsofty.shared.ext.displayToast
+import com.xsofty.shared.compose.Loader
+import com.xsofty.shared.firebase.FirebaseStorageManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CreateRoomFragment : Fragment() {
 
     private val viewModel: CreateRoomViewModel by viewModels()
+    private val firebaseStorageManager = FirebaseStorageManager()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +42,17 @@ class CreateRoomFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                CreateRoomView()
+                when (val categories = viewModel.categories.value) {
+                    is Result.Success -> {
+                        CreateRoomContent(categories.data)
+                    }
+                    Result.Loading -> {
+                        Loader()
+                    }
+                    is Result.Error -> {
+
+                    }
+                }
             }
         }
     }
@@ -43,45 +63,43 @@ class CreateRoomFragment : Fragment() {
     }
 
     @Composable
-    private fun CreateRoomView() {
+    private fun CreateRoomContent(categories: List<CategoryEntity>) {
+        var chosenCategoryId by remember { mutableStateOf("") }
         var titleText by remember { mutableStateOf("") }
         var descriptionText by remember { mutableStateOf("") }
-        var chosenCategoryId by remember { mutableStateOf("") }
 
         Column(
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            TextField(
-                value = titleText,
-                onValueChange = { titleText = it },
-                label = { Text(text = "Title") }
+            CategoryChooser(
+                categories = categories,
+                onCategoryChosen = {
+                    chosenCategoryId = it.id
+                }
             )
-            TextField(
-                value = descriptionText,
-                onValueChange = { descriptionText = it },
-                label = { Text(text = "Description") }
-            )
-
-            when (val categories = viewModel.categories.value) {
-                is Result.Success -> {
-                    for (category in categories.data) {
-                        TextButton(onClick = { chosenCategoryId = category.id }) {
-                            Text(text = category.title)
-                        }
-                    }
-                }
-                is Result.Error -> {
-                }
-                Result.Loading -> {
-                }
+            TitleAndInput(title = "TITLE") { title ->
+                titleText = title
             }
-
-            Button(
+            TitleAndInput(title = "DESCRIPTION") { description ->
+                descriptionText = description
+            }
+            TextButton(
+                modifier = Modifier
+                    .height(60.dp)
+                    .fillMaxWidth()
+                    .background(
+                        color = if (chosenCategoryId.isNotBlank() && titleText.isNotBlank() && descriptionText.isNotBlank()) {
+                            Color.Green
+                        } else {
+                            Color.DarkGray
+                        },
+                        shape = RoundedCornerShape(16.dp)
+                    ),
                 onClick = {
                     viewModel.createRoom(
                         categoryId = chosenCategoryId,
@@ -91,16 +109,131 @@ class CreateRoomFragment : Fragment() {
                 },
                 enabled = chosenCategoryId.isNotBlank() && titleText.isNotBlank() && descriptionText.isNotBlank()
             ) {
-                Text(text = "Create Room")
+                Text(
+                    text = "Create Room",
+                    color = Color.White
+                )
             }
+        }
+    }
 
-            // move to function
-            when (viewModel.createRoomStatus.value) {
-                is Result.Success -> displayToast("Room created Successfully!")
-                is Result.Error -> displayToast("Error in room creation")
-                Result.Loading -> {
+    @Composable
+    private fun CategoryChooser(
+        categories: List<CategoryEntity>,
+        onCategoryChosen: (CategoryEntity) -> Unit
+    ) {
+
+        var chosenCategory: CategoryEntity? by remember { mutableStateOf(null) }
+
+        Text(
+            text = if (chosenCategory == null) {
+                "Choose Category"
+            } else {
+                chosenCategory!!.title
+            },
+            fontSize = 18.sp,
+        )
+
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(categories) {
+                CategoryListItem(
+                    category = it,
+                    isChosen = chosenCategory?.id == it.id
+                ) { newChosenCategory ->
+                    chosenCategory = it
+                    onCategoryChosen(newChosenCategory)
                 }
             }
         }
+    }
+
+    @Composable
+    private fun CategoryListItem(
+        category: CategoryEntity,
+        isChosen: Boolean,
+        onCategoryClicked: (CategoryEntity) -> Unit
+    ) {
+        val categoryImageUrl: MutableState<String?> = remember { mutableStateOf(null) }
+        firebaseStorageManager.imageIdToUrl(category.imageId) { fetchedImageUrl ->
+            categoryImageUrl.value = fetchedImageUrl
+        }
+
+        Box(
+            contentAlignment = Alignment.BottomCenter,
+            modifier = Modifier
+                .background(
+                    color = Color.Black,
+                    shape = RoundedCornerShape(16.dp)
+                )
+                .fillMaxHeight()
+                .width(120.dp)
+                .border(
+                    width = if (!isChosen) 1.dp else 3.dp,
+                    color = if (!isChosen) Color.Magenta else Color.Green,
+                    shape = RoundedCornerShape(16.dp)
+                )
+                .clickable {
+                    onCategoryClicked(category)
+                }
+        ) {
+            Image(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(
+                        shape = RoundedCornerShape(16.dp)
+                    ),
+                painter = rememberImagePainter(categoryImageUrl.value),
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(44.dp)
+                    .background(
+                        color = Color.Red,
+                        shape = RoundedCornerShape(
+                            topStart = 0.dp, topEnd = 0.dp,
+                            bottomStart = 16.dp, bottomEnd = 16.dp
+                        )
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = category.title,
+                    color = Color.DarkGray,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun TitleAndInput(
+        title: String,
+        onTextEntered: (String) -> Unit
+    ) {
+        val textFieldText = remember { mutableStateOf("") }
+        Text(
+            text = title,
+            fontSize = 18.sp,
+        )
+        TextField(
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .fillMaxWidth(),
+            value = textFieldText.value,
+            onValueChange = { newText ->
+                textFieldText.value = newText
+                onTextEntered(newText)
+            }
+        )
     }
 }

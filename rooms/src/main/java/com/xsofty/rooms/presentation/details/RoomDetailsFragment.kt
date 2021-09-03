@@ -4,17 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,12 +32,12 @@ import com.xsofty.categories.domain.model.entity.CategoryEntity
 import com.xsofty.rooms.R
 import com.xsofty.rooms.domain.model.entity.CommentEntity
 import com.xsofty.rooms.domain.model.entity.RoomDetailsEntity
-import com.xsofty.rooms.domain.model.entity.UserStatus
+import com.xsofty.rooms.domain.model.entity.RoomStatus
 import com.xsofty.shared.Result
+import com.xsofty.shared.compose.Loader
 import com.xsofty.shared.firebase.FirebaseStorageManager
 import com.xsofty.shared.storage.AppPreferences
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -69,7 +67,6 @@ class RoomDetailsFragment : Fragment() {
 
         viewModel.requestRoomDetails(args.roomId)
         viewModel.requestComments(args.roomId)
-        // TODO: Observe other statuses
     }
 
     @Composable
@@ -78,41 +75,86 @@ class RoomDetailsFragment : Fragment() {
             is Result.Success -> {
                 RoomDetailsContent(roomDetails.data)
             }
-            is Result.Error -> {
-            }
             Result.Loading -> {
+                Loader()
+            }
+            is Result.Error -> {
             }
         }
         when (viewModel.addCommentStatus.value) {
             is Result.Success -> {
-                Timber.d("Here received comment success")
                 viewModel.requestComments(args.roomId)
             }
             else -> {
+                // Could not add comment
             }
         }
     }
 
     @Composable
-    private fun RoomDetailsContent(roomDetails: RoomDetailsEntity) {
+    private fun RoomDetailsContent(
+        roomDetails: RoomDetailsEntity
+    ) {
         Column(
             modifier = Modifier
+                .padding(top = 16.dp)
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState())
         ) {
-            CategoryWithButton(roomDetails.category, roomDetails.userStatus) { status ->
-                when (status) {
-                    UserStatus.CREATOR -> viewModel.deleteRoom(roomDetails.id)
-                    UserStatus.JOINED -> viewModel.unjoinRoom(roomDetails.id)
-                    UserStatus.NOT_JOINED -> viewModel.joinRoom(roomDetails.id)
+            CategoryWithButton(roomDetails.category) { status ->
+                if (status == RoomStatus.INACTIVE) {
+                    // Go Back
+                } else {
+                    viewModel.changeRoomStatus(roomDetails.id, status)
                 }
             }
             RoomOverView(roomDetails.title, roomDetails.description)
-            CommentSection { commentText ->
-                Timber.d("Here adding comment")
+            Text(
+                text = stringResource(R.string.room_comments),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Black
+            )
+
+            when (val comments = viewModel.comments.value) {
+                is Result.Success -> {
+                    if (comments.data.isNotEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .background(
+                                    color = Color.LightGray,
+                                    shape = RoundedCornerShape(16.dp)
+                                )
+                                .border(
+                                    width = 2.dp,
+                                    color = Color.DarkGray,
+                                    shape = RoundedCornerShape(16.dp)
+                                )
+                        ) {
+                            for (comment in comments.data) {
+                                CommentListItem(comment = comment)
+                            }
+                        }
+                    }
+                }
+                is Result.Error -> {
+                }
+            }
+            val isEnabled = when (val roomStatus = viewModel.roomStatus.value) {
+                is Result.Success -> {
+                    when (roomStatus.data) {
+                        RoomStatus.CREATOR, RoomStatus.JOINED -> true
+                        else -> false
+                    }
+                }
+                else -> false
+            }
+            CommentTextField(isEnabled) {
                 viewModel.addComment(
-                    roomId = roomDetails.id,
-                    text = commentText
+                    roomId = args.roomId,
+                    text = it
                 )
             }
         }
@@ -121,8 +163,7 @@ class RoomDetailsFragment : Fragment() {
     @Composable
     private fun CategoryWithButton(
         category: CategoryEntity,
-        userStatus: UserStatus,
-        onUserStatusButtonClicked: (UserStatus) -> Unit
+        onUserStatusButtonClicked: (RoomStatus) -> Unit
     ) {
         val categoryImageUrl: MutableState<String?> = remember { mutableStateOf(null) }
         firebaseStorageManager.imageIdToUrl(category.imageId) { fetchedImageUrl ->
@@ -149,46 +190,54 @@ class RoomDetailsFragment : Fragment() {
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
             )
-            UserStatusButton(userStatus, onUserStatusButtonClicked)
+            UserStatusButton(onUserStatusButtonClicked)
         }
     }
 
     @Composable
     private fun UserStatusButton(
-        userStatus: UserStatus,
-        onUserStatusButtonClicked: (UserStatus) -> Unit
+        onUserStatusButtonClicked: (RoomStatus) -> Unit
     ) {
-        Box(
-            modifier = Modifier
-                .padding(16.dp)
-                .width(120.dp)
-                .height(50.dp)
-                .background(
-                    color = when (userStatus) {
-                        UserStatus.CREATOR -> Color.Red
-                        UserStatus.JOINED -> Color.LightGray
-                        UserStatus.NOT_JOINED -> Color.Green
-                    },
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .border(
-                    width = 2.dp,
-                    color = Color.White,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .clickable {
-                    onUserStatusButtonClicked(userStatus)
-                },
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = when (userStatus) {
-                    UserStatus.CREATOR -> stringResource(id = R.string.room_delete)
-                    UserStatus.JOINED -> stringResource(id = R.string.room_unjoin)
-                    UserStatus.NOT_JOINED -> stringResource(id = R.string.room_join)
-                },
-                color = Color.White
-            )
+        when (val newStatus = viewModel.roomStatus.value) {
+            is Result.Success -> {
+                Box(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .width(120.dp)
+                        .height(50.dp)
+                        .background(
+                            color = when (newStatus.data) {
+                                RoomStatus.CREATOR -> Color.Red
+                                RoomStatus.JOINED -> Color.LightGray.copy(alpha = 0.5f)
+                                RoomStatus.NOT_JOINED -> Color.Green
+                                RoomStatus.INACTIVE -> Color.LightGray //TODO
+                            },
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .border(
+                            width = 2.dp,
+                            color = Color.White,
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .clickable {
+                            onUserStatusButtonClicked(newStatus.data)
+                        },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = when (newStatus.data) {
+                            RoomStatus.CREATOR -> stringResource(id = R.string.room_delete)
+                            RoomStatus.JOINED -> stringResource(id = R.string.room_unjoin)
+                            RoomStatus.NOT_JOINED -> stringResource(id = R.string.room_join)
+                            RoomStatus.INACTIVE -> "Go Back"
+                        },
+                        color = Color.White
+                    )
+                }
+            }
+            is Result.Error -> {
+
+            }
         }
     }
 
@@ -238,56 +287,10 @@ class RoomDetailsFragment : Fragment() {
     }
 
     @Composable
-    private fun CommentSection(
+    private fun CommentTextField(
+        isEnabled: Boolean,
         onCommentAdded: (String) -> Unit
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.room_comments),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.Black
-            )
-
-            when (val comments = viewModel.comments.value) {
-                is Result.Success -> {
-                    if (comments.data.isNotEmpty()) {
-                        LazyColumn(
-                            modifier = Modifier
-                                //.fillMaxWidth()
-                                //.fillMaxHeight()
-                                .background(
-                                    color = Color.LightGray,
-                                    shape = RoundedCornerShape(16.dp)
-                                )
-                                .border(
-                                    width = 2.dp,
-                                    color = Color.DarkGray,
-                                    shape = RoundedCornerShape(16.dp)
-                                )
-                        ) {
-                            items(comments.data) {
-                                CommentListItem(it)
-                            }
-                        }
-                    }
-                }
-                is Result.Error -> {
-
-                }
-            }
-            CommentTextField { commentText ->
-                onCommentAdded(commentText)
-            }
-        }
-    }
-
-    @Composable
-    private fun CommentTextField(onCommentAdded: (String) -> Unit) {
 
         val textFieldText = remember { mutableStateOf("") }
 
@@ -295,6 +298,7 @@ class RoomDetailsFragment : Fragment() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
+                .padding(vertical = 8.dp)
                 .background(
                     color = Color.DarkGray,
                     shape = RoundedCornerShape(16.dp)
@@ -326,7 +330,7 @@ class RoomDetailsFragment : Fragment() {
                     .padding(start = 0.dp, top = 2.dp, end = 2.dp, bottom = 2.dp)
                     .fillMaxHeight()
                     .background(
-                        color = Color.LightGray,
+                        color = if (isEnabled) Color.Green else Color.LightGray,
                         shape = RoundedCornerShape(16.dp)
                     )
                     .clickable {

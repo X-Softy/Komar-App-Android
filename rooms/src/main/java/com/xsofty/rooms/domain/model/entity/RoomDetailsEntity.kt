@@ -7,9 +7,9 @@ data class RoomDetailsEntity(
     val title: String,
     val description: String,
     val category: CategoryEntity,
-    val userStatus: UserStatus
+    val roomStatus: RoomStatus
 )
 
-enum class UserStatus {
-    CREATOR, JOINED, NOT_JOINED
+enum class RoomStatus {
+    CREATOR, JOINED, NOT_JOINED, INACTIVE
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_light">#C9ADA7</color>
+    <color name="primary_dark">#4A4E69</color>
+
+    <color name="quaternary_light">#4A4E69</color>
+    <color name="quaternary_dark">#C9ADA7</color>
+
+    <color name="secondary_light">#F2E9E4</color>
+    <color name="secondary_dark">#22223B</color>
+
+    <color name="tertiary_light">#F2E9E4</color>
+    <color name="tertiary_dark">#9A8C98</color>
+</resources>

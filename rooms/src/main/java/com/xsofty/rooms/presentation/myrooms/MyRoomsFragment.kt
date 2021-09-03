@@ -1,12 +1,13 @@
 package com.xsofty.rooms.presentation.myrooms
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +24,10 @@ import androidx.navigation.fragment.findNavController
 import com.xsofty.rooms.domain.model.entity.RoomEntity
 import com.xsofty.rooms.presentation.compose.RoomListItem
 import com.xsofty.shared.Result
+import com.xsofty.shared.compose.Loader
 import com.xsofty.shared.compose.NavBarSpacer
+import com.xsofty.shared.ext.displayToast
+import com.xsofty.shared.nav.AuthResultListener
 import com.xsofty.shared.nav.CustomBackPressable
 import com.xsofty.shared.nav.contracts.CreateRoomNavContract
 import com.xsofty.shared.nav.contracts.RoomDetailsNavContract
@@ -35,9 +39,6 @@ import javax.inject.Inject
 class MyRoomsFragment : Fragment(), CustomBackPressable {
 
     private val viewModel: MyRoomsViewModel by viewModels()
-
-    @Inject
-    lateinit var signInNavContract: SignInNavContract
 
     @Inject
     lateinit var createRoomNavContract: CreateRoomNavContract
@@ -72,38 +73,39 @@ class MyRoomsFragment : Fragment(), CustomBackPressable {
             is Result.Success -> {
                 MyRoomsContent(rooms.data)
             }
-            is Result.Error -> {
-            }
             Result.Loading -> {
+                Loader()
+            }
+            is Result.Error -> {
             }
         }
     }
 
     @Composable
     private fun MyRoomsContent(rooms: List<RoomEntity>) {
-        Column(
+        LazyColumn(
             modifier = Modifier
+                .padding(top = 16.dp)
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
-                .fillMaxHeight()
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            MyRoomsButtons()
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(16.dp)
-            )
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(rooms.size + 1) { index ->
-                    if (index < rooms.size) {
-                        RoomListItem(room = rooms[index]) { room ->
-                            navigateToRoomDetails(room.id)
-                        }
-                    } else {
-                        Spacer(modifier = Modifier.fillMaxWidth().height(54.dp))
+            item {
+                MyRoomsButtons()
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(16.dp)
+                )
+            }
+            items(rooms.size + 1) { index ->
+                if (index < rooms.size) {
+                    RoomListItem(room = rooms[index]) { room ->
+                        navigateToRoomDetails(room.id)
                     }
+                } else {
+                    NavBarSpacer()
                 }
             }
         }
@@ -121,7 +123,7 @@ class MyRoomsFragment : Fragment(), CustomBackPressable {
                 navigateToCreateRoom()
             }
             MyRoomsButton(buttonText = "Sign Out") {
-                navigateToSignIn()
+                signOut()
             }
         }
     }
@@ -162,8 +164,11 @@ class MyRoomsFragment : Fragment(), CustomBackPressable {
         }
     }
 
-    private fun navigateToSignIn() {
-        signInNavContract.show(findNavController())
+    private fun signOut() {
+        displayToast("Signing out...")
+        Handler(Looper.getMainLooper()).postDelayed({
+            (requireActivity() as AuthResultListener).signOut()
+        }, 2000L)
     }
 
     private fun navigateToCreateRoom() {

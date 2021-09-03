@@ -24,11 +24,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import com.xsofty.komarista.R
-import com.xsofty.komarista.helper.AuthResultListener
+import com.xsofty.shared.nav.AuthResultListener
+import com.xsofty.shared.theme.ThemeManager
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
+
+    @Inject
+    lateinit var themeManager: ThemeManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,75 +48,72 @@ class SignInFragment : Fragment() {
             }
         }
     }
-}
 
-@Composable
-private fun SignInView(
-    onSignInButtonClicked: () -> Unit
-) {
-    Box(
-        contentAlignment = Alignment.BottomCenter,
-        modifier = Modifier.fillMaxSize()
+    @Composable
+    private fun SignInView(
+        onSignInButtonClicked: () -> Unit
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.smoke_pink),
-            contentScale = ContentScale.FillBounds,
-            contentDescription = null
-        )
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
+        Box(
+            contentAlignment = Alignment.BottomCenter,
         ) {
-            SignInButton {
-                onSignInButtonClicked()
+            Image(
+                painter = painterResource(themeManager.backgroundImageId),
+                contentScale = ContentScale.Crop,
+                contentDescription = null
+            )
+            Column {
+                SignInButton {
+                    onSignInButtonClicked()
+                }
+                Spacer(modifier = Modifier.height(128.dp))
             }
-            Spacer(modifier = Modifier.height(128.dp))
         }
     }
-}
 
-@Composable
-private fun SignInButton(
-    onButtonClick: () -> Unit = {}
-) {
-    val buttonTextIdle = stringResource(R.string.button_sign_in_idle)
-    val buttonTextPressed = stringResource(R.string.button_sign_in_pressed)
-
-    val buttonText = remember { mutableStateOf(buttonTextIdle) }
-
-    Row(
-        modifier = Modifier
-            .background(color = Color.White, RoundedCornerShape(16.dp))
-            .fillMaxWidth()
-            .height(64.dp)
-            .clickable {
-                buttonText.value = buttonTextPressed
-                onButtonClick()
-            },
-        verticalAlignment = Alignment.CenterVertically
+    @Composable
+    private fun SignInButton(
+        onButtonClick: () -> Unit = {}
     ) {
-        Spacer(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(16.dp)
-        )
-        Image(
-            painter = painterResource(id = R.drawable.icon_google),
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .width(32.dp)
-                .height(32.dp)
-        )
+        val buttonTextIdle = stringResource(R.string.button_sign_in_idle)
+        val buttonTextPressed = stringResource(R.string.button_sign_in_pressed)
+
+        val buttonText = remember { mutableStateOf(buttonTextIdle) }
+
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .background(color = Color.White, RoundedCornerShape(16.dp))
+                .fillMaxWidth()
+                .height(64.dp)
+                .clickable {
+                    buttonText.value = buttonTextPressed
+                    onButtonClick()
+                },
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = buttonText.value,
-                color = Color.DarkGray,
-                fontSize = 20.sp
+            Spacer(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(16.dp)
             )
+            Image(
+                painter = painterResource(id = R.drawable.icon_google),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .width(32.dp)
+                    .height(32.dp)
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = buttonText.value,
+                    color = Color.DarkGray,
+                    fontSize = 20.sp
+                )
+            }
         }
     }
 }

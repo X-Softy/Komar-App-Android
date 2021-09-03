@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.xsofty.rooms.domain.model.entity.CommentEntity
 import com.xsofty.rooms.domain.model.entity.RoomDetailsEntity
+import com.xsofty.rooms.domain.model.entity.RoomStatus
 import com.xsofty.rooms.domain.model.params.AddCommentParams
 import com.xsofty.rooms.domain.usecase.details.AddCommentUseCase
 import com.xsofty.rooms.domain.usecase.details.GetCommentsUseCase
@@ -15,7 +16,6 @@ import com.xsofty.rooms.domain.usecase.details.status.RoomDetailsStatusUseCase
 import com.xsofty.rooms.domain.usecase.details.status.UnjoinRoomUseCase
 import com.xsofty.shared.Result
 import com.xsofty.shared.base.BaseViewModel
-import com.xsofty.shared.data
 import com.xsofty.shared.ext.handleLoading
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -42,17 +42,12 @@ class RoomDetailsViewModel @Inject constructor(
     val comments: MutableState<Result<List<CommentEntity>>> = mutableStateOf(Result.Loading)
     private var timesCommentsFetched = 0
 
-    private val addCommentRequestFlow = MutableSharedFlow<Pair<String, AddCommentParams>>(extraBufferCapacity = 1)
+    private val addCommentRequestFlow =
+        MutableSharedFlow<Pair<String, AddCommentParams>>(extraBufferCapacity = 1)
     val addCommentStatus: MutableState<Result<Int>> = mutableStateOf(Result.Loading)
 
-    private val deleteRoomStatusRequestFlow = MutableSharedFlow<String>(extraBufferCapacity = 1)
-    val deleteRoomStatus: MutableState<Result<Unit>> = mutableStateOf(Result.Loading)
-
-    private val joinRoomStatusRequestFlow = MutableSharedFlow<String>(extraBufferCapacity = 1)
-    val joinRoomStatus: MutableState<Result<Unit>> = mutableStateOf(Result.Loading)
-
-    private val unjoinRoomStatusRequestFlow = MutableSharedFlow<String>(extraBufferCapacity = 1)
-    val unjoinRoomStatus: MutableState<Result<Unit>> = mutableStateOf(Result.Loading)
+    private val roomStatusRequestFlow = MutableSharedFlow<Pair<String, RoomStatus>>(extraBufferCapacity = 1)
+    val roomStatus: MutableState<Result<RoomStatus>> = mutableStateOf(Result.Loading)
 
     init {
         viewModelScope.launch {
@@ -61,6 +56,9 @@ class RoomDetailsViewModel @Inject constructor(
                 .map { roomId -> getRoomDetailsUseCase(roomId) }
                 .collect {
                     roomDetails.value = it
+                    if (it is Result.Success) {
+                        roomStatus.value = Result.Success(it.data.roomStatus)
+                    }
                 }
         }
         viewModelScope.launch {
@@ -70,13 +68,12 @@ class RoomDetailsViewModel @Inject constructor(
                     addCommentUseCase(roomId, addCommentParams)
                 }
                 .collect {
-                    Timber.d("Here collecting add comment status")
                     addCommentStatus.value = when (it) {
                         is Result.Success -> {
                             timesCommentsFetched++
                             Result.Success(timesCommentsFetched)
                         }
-                        else -> Result.Error.NetworkError
+                        else -> Result.Error()
                     }
                 }
         }
@@ -84,25 +81,29 @@ class RoomDetailsViewModel @Inject constructor(
             commentsRequestFlow
                 .map { roomId -> getCommentsUseCase(roomId) }
                 .collect {
-                    Timber.d("Here collecting comments %s", it.toString())
                     comments.value = it
                 }
         }
-        initStatusService(deleteRoomStatusRequestFlow, deleteRoomStatus, deleteRoomUseCase)
-        initStatusService(joinRoomStatusRequestFlow, joinRoomStatus, joinRoomUseCase)
-        initStatusService(unjoinRoomStatusRequestFlow, unjoinRoomStatus, unjoinRoomUseCase)
+        viewModelScope.launch {
+            roomStatusRequestFlow
+                .map { (roomId, currentRoomStatus) ->
+                    when (currentRoomStatus) {
+                        RoomStatus.CREATOR -> deleteRoomUseCase(roomId)
+                        RoomStatus.JOINED -> unjoinRoomUseCase(roomId)
+                        RoomStatus.NOT_JOINED -> joinRoomUseCase(roomId)
+                        else -> {}
+                    }
+                }
+                .collect {
+                    roomStatus.value = it as Result<RoomStatus>
+                }
+        }
     }
 
-    private fun initStatusService(
-        statusRequestFlow: MutableSharedFlow<String>,
-        status: MutableState<Result<Unit>>,
-        detailsStatusUseCase: RoomDetailsStatusUseCase
-    ) {
-        viewModelScope.launch {
-            statusRequestFlow
-                .map { roomId -> detailsStatusUseCase(roomId) }
-                .collect { status.value = it }
-        }
+    fun changeRoomStatus(roomId: String, currentRoomStatus: RoomStatus) {
+        roomStatusRequestFlow.tryEmit(
+            roomId to currentRoomStatus
+        )
     }
 
     fun requestRoomDetails(roomId: String) {
@@ -117,17 +118,5 @@ class RoomDetailsViewModel @Inject constructor(
         addCommentRequestFlow.tryEmit(
             roomId to AddCommentParams(text)
         )
-    }
-
-    fun deleteRoom(roomId: String) {
-        deleteRoomStatusRequestFlow.tryEmit(roomId)
-    }
-
-    fun joinRoom(roomId: String) {
-        joinRoomStatusRequestFlow.tryEmit(roomId)
-    }
-
-    fun unjoinRoom(roomId: String) {
-        unjoinRoomStatusRequestFlow.tryEmit(roomId)
     }
 }

@@ -10,8 +10,8 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.xsofty.komarista.R
+import com.xsofty.shared.nav.AuthResultListener
 import com.xsofty.shared.storage.AppPreferences
-import javax.inject.Inject
 
 class FirebaseAuthHelper(
     private val activity: Activity,
