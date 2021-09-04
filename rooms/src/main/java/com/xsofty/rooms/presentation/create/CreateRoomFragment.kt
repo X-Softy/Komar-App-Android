@@ -1,5 +1,6 @@
 package com.xsofty.rooms.presentation.create
 
+import android.graphics.fonts.FontStyle
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,6 +31,7 @@ import coil.compose.rememberImagePainter
 import com.xsofty.categories.domain.model.entity.CategoryEntity
 import com.xsofty.shared.Result
 import com.xsofty.shared.compose.Loader
+import com.xsofty.shared.compose.VerticalSpacer
 import com.xsofty.shared.firebase.FirebaseStorageManager
 import com.xsofty.shared.theme.ColorType
 import com.xsofty.shared.theme.ThemeManager
@@ -55,7 +61,7 @@ class CreateRoomFragment : Fragment() {
                     Result.Loading -> {
                         Loader(
                             backgroundColor = themeManager.getColor(colorType = ColorType.BACKGROUND),
-                            loaderColor = themeManager.getColor(colorType = ColorType.QUATERNARY)
+                            loaderColor = themeManager.getColor(colorType = ColorType.PRIMARY)
                         )
                     }
                     is Result.Error -> {
@@ -80,12 +86,13 @@ class CreateRoomFragment : Fragment() {
         Column(
             modifier = Modifier
                 .background(color = themeManager.getColor(colorType = ColorType.BACKGROUND_SECONDARY))
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            VerticalSpacer()
             CategoryChooser(
                 categories = categories,
                 onCategoryChosen = {
@@ -225,7 +232,8 @@ class CreateRoomFragment : Fragment() {
         Text(
             text = title,
             fontSize = 18.sp,
-            color = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY)
+            fontWeight = FontWeight.Medium,
+            color = themeManager.getColor(colorType = ColorType.HEADER)
         )
         TextField(
             modifier = Modifier

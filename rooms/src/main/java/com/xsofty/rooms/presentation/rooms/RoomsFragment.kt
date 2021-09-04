@@ -2,6 +2,7 @@ package com.xsofty.rooms.presentation.rooms
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
@@ -68,7 +69,7 @@ class RoomsFragment : Fragment() {
             Result.Loading -> {
                 Loader(
                     backgroundColor = themeManager.getColor(colorType = ColorType.BACKGROUND),
-                    loaderColor = themeManager.getColor(colorType = ColorType.QUATERNARY)
+                    loaderColor = themeManager.getColor(colorType = ColorType.PRIMARY)
                 )
             }
             is Result.Error -> {

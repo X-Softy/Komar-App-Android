@@ -82,7 +82,7 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
             Result.Loading -> {
                 Loader(
                     backgroundColor = themeManager.getColor(colorType = ColorType.BACKGROUND),
-                    loaderColor = themeManager.getColor(colorType = ColorType.QUATERNARY)
+                    loaderColor = themeManager.getColor(colorType = ColorType.PRIMARY)
                 )
             }
             is Result.Error -> {

@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xsofty.rooms.R
@@ -70,6 +71,7 @@ private fun RoomOverView(
             )
             Text(
                 text = room.description,
+                overflow = TextOverflow.Ellipsis,
                 fontSize = 12.sp,
                 color = themeManager.getColor(colorType = ColorType.TEXT_SECONDARY),
                 fontWeight = FontWeight.Normal,

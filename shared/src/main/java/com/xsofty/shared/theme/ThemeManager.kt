@@ -21,7 +21,8 @@ enum class ColorType(val lightId: Int, val darkId: Int) {
     BACKGROUND(R.color.background_light, R.color.background_dark),
     BACKGROUND_SECONDARY(R.color.background_secondary_light, R.color.background_secondary_dark),
     INPUT(R.color.input_light, R.color.input_dark),
-    NATIVE_BUTTON_DISABLED(R.color.native_button_enabled, R.color.native_button_disabled)
+    NATIVE_BUTTON_DISABLED(R.color.native_button_enabled, R.color.native_button_disabled),
+    HEADER(R.color.header_light, R.color.header_dark)
 }
 
 

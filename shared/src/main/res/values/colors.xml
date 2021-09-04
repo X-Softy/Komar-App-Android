@@ -24,6 +24,9 @@
     <color name="native_button_disabled">#2c2c2e</color>
     <color name="native_button_enabled">#e5e2e9</color>
 
+    <color name="header_light">#6e6b72</color>
+    <color name="header_dark">#8a8b8d</color>
+
     <color name="background_light">@android:color/white</color>
     <color name="background_dark">@android:color/black</color>
 

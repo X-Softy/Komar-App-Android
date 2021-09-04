@@ -27,6 +27,7 @@ import javax.inject.Inject
 import android.widget.Toolbar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.ui.NavigationUI
 import com.xsofty.shared.theme.ColorType
 import timber.log.Timber
 
@@ -45,6 +46,8 @@ class MainActivity : AppCompatActivity(), AuthResultListener {
 
     private lateinit var bottomNavView: BottomNavigationView
 
+    private lateinit var appBarConfiguration: AppBarConfiguration
+
     private val authHelper by lazy {
         FirebaseAuthHelper(this, appPreferences)
     }
@@ -61,19 +64,21 @@ class MainActivity : AppCompatActivity(), AuthResultListener {
         setupNavigation()
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        finish()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         authHelper.signOut()
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        finish()
+    }
+
     private fun setupNavigation() {
         bottomNavView = findViewById(R.id.bottom_nav_view)
         bottomNavView.setupWithNavController(navController)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -89,7 +94,7 @@ class MainActivity : AppCompatActivity(), AuthResultListener {
             }
         }
 
-        val appBarConfiguration = AppBarConfiguration(
+        appBarConfiguration = AppBarConfiguration(
             topLevelDestinationIds = setOf(
                 R.id.signInFragment,
                 R.id.categoriesFragment,
@@ -97,6 +102,10 @@ class MainActivity : AppCompatActivity(), AuthResultListener {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
     }
 
     override fun fireSignInIntent() {
@@ -115,9 +124,9 @@ class MainActivity : AppCompatActivity(), AuthResultListener {
         finish()
     }
 
-    override fun onBackPressed() {
-        (getDisplayedFragment() as? CustomBackPressable)?.onBackPressed() ?: super.onBackPressed()
-    }
+//    override fun onBackPressed() {
+//        (getDisplayedFragment() as? CustomBackPressable)?.onBackPressed() ?: super.onBackPressed()
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

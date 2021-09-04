@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -86,7 +85,7 @@ class RoomDetailsFragment : Fragment() {
             Result.Loading -> {
                 Loader(
                     backgroundColor = themeManager.getColor(colorType = ColorType.BACKGROUND),
-                    loaderColor = themeManager.getColor(colorType = ColorType.QUATERNARY)
+                    loaderColor = themeManager.getColor(colorType = ColorType.PRIMARY)
                 )
             }
             is Result.Error -> {
@@ -113,20 +112,21 @@ class RoomDetailsFragment : Fragment() {
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             VerticalSpacer()
             CategoryWithButton(roomDetails.category) { status ->
                 if (status == RoomStatus.INACTIVE) {
-                    // TODO
+                    requireActivity().onBackPressed()
                 } else {
                     viewModel.changeRoomStatus(roomDetails.id, status)
                 }
             }
             RoomOverView(roomDetails.title, roomDetails.description)
             Text(
+                modifier = Modifier.padding(start = 12.dp),
                 text = stringResource(R.string.room_comments),
-                fontSize = 20.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Medium,
                 color = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY)
             )
@@ -146,8 +146,11 @@ class RoomDetailsFragment : Fragment() {
                                     shape = RoundedCornerShape(16.dp)
                                 )
                         ) {
-                            for (comment in comments.data) {
-                                CommentListItem(comment = comment)
+                            comments.data.forEachIndexed { index, comment ->
+                                CommentListItem(
+                                    comment = comment,
+                                    isFirst = index == 0
+                                )
                             }
                         }
                     }
@@ -256,11 +259,13 @@ class RoomDetailsFragment : Fragment() {
         description: String
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
+                modifier = Modifier.padding(start = 12.dp),
                 text = title,
                 fontSize = 24.sp,
+                fontWeight = FontWeight.Medium,
                 color = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY)
             )
             Column(
@@ -282,7 +287,7 @@ class RoomDetailsFragment : Fragment() {
                     fontWeight = FontWeight.Medium,
                     color = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY),
                     modifier = Modifier.padding(
-                        top = 12.dp, bottom = 12.dp,
+                        top = 12.dp, bottom = 0.dp,
                         start = 12.dp, end = 12.dp
                     )
                 )
@@ -370,10 +375,16 @@ class RoomDetailsFragment : Fragment() {
     }
 
     @Composable
-    private fun CommentListItem(comment: CommentEntity) {
+    private fun CommentListItem(
+        comment: CommentEntity,
+        isFirst: Boolean
+    ) {
         Column(
             modifier = Modifier
-                .padding(12.dp)
+                .padding(
+                    start = 12.dp, top = if (isFirst) 12.dp else 0.dp,
+                    end = 12.dp, bottom = 12.dp
+                )
                 .fillMaxWidth()
                 .background(
                     color = themeManager.getColor(colorType = ColorType.SECONDARY),
