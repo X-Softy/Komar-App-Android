@@ -27,13 +27,19 @@ import com.xsofty.categories.domain.model.entity.CategoryEntity
 import com.xsofty.shared.Result
 import com.xsofty.shared.compose.Loader
 import com.xsofty.shared.firebase.FirebaseStorageManager
+import com.xsofty.shared.theme.ColorType
+import com.xsofty.shared.theme.ThemeManager
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CreateRoomFragment : Fragment() {
 
     private val viewModel: CreateRoomViewModel by viewModels()
     private val firebaseStorageManager = FirebaseStorageManager()
+
+    @Inject
+    lateinit var themeManager: ThemeManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +53,10 @@ class CreateRoomFragment : Fragment() {
                         CreateRoomContent(categories.data)
                     }
                     Result.Loading -> {
-                        Loader()
+                        Loader(
+                            backgroundColor = themeManager.getColor(colorType = ColorType.BACKGROUND),
+                            loaderColor = themeManager.getColor(colorType = ColorType.QUATERNARY)
+                        )
                     }
                     is Result.Error -> {
 
@@ -70,6 +79,7 @@ class CreateRoomFragment : Fragment() {
 
         Column(
             modifier = Modifier
+                .background(color = themeManager.getColor(colorType = ColorType.BACKGROUND_SECONDARY))
                 .padding(16.dp)
                 .fillMaxWidth()
                 .fillMaxHeight()
@@ -94,9 +104,9 @@ class CreateRoomFragment : Fragment() {
                     .fillMaxWidth()
                     .background(
                         color = if (chosenCategoryId.isNotBlank() && titleText.isNotBlank() && descriptionText.isNotBlank()) {
-                            Color.Green
+                            themeManager.getColor(colorType = ColorType.TERTIARY)
                         } else {
-                            Color.DarkGray
+                            themeManager.getColor(colorType = ColorType.NATIVE_BUTTON_DISABLED)
                         },
                         shape = RoundedCornerShape(16.dp)
                     ),
@@ -110,8 +120,8 @@ class CreateRoomFragment : Fragment() {
                 enabled = chosenCategoryId.isNotBlank() && titleText.isNotBlank() && descriptionText.isNotBlank()
             ) {
                 Text(
-                    text = "Create Room",
-                    color = Color.White
+                    text = "Create",
+                    color = Color.DarkGray
                 )
             }
         }
@@ -124,15 +134,6 @@ class CreateRoomFragment : Fragment() {
     ) {
 
         var chosenCategory: CategoryEntity? by remember { mutableStateOf(null) }
-
-        Text(
-            text = if (chosenCategory == null) {
-                "Choose Category"
-            } else {
-                chosenCategory!!.title
-            },
-            fontSize = 18.sp,
-        )
 
         LazyRow(
             modifier = Modifier
@@ -167,14 +168,14 @@ class CreateRoomFragment : Fragment() {
             contentAlignment = Alignment.BottomCenter,
             modifier = Modifier
                 .background(
-                    color = Color.Black,
+                    color = themeManager.getColor(colorType = ColorType.PRIMARY),
                     shape = RoundedCornerShape(16.dp)
                 )
                 .fillMaxHeight()
                 .width(120.dp)
                 .border(
-                    width = if (!isChosen) 1.dp else 3.dp,
-                    color = if (!isChosen) Color.Magenta else Color.Green,
+                    width = if (!isChosen) 0.dp else 3.dp,
+                    color = if (!isChosen) Color.Transparent else Color.Green,
                     shape = RoundedCornerShape(16.dp)
                 )
                 .clickable {
@@ -196,7 +197,7 @@ class CreateRoomFragment : Fragment() {
                     .fillMaxWidth()
                     .height(44.dp)
                     .background(
-                        color = Color.Red,
+                        color = themeManager.getColor(colorType = ColorType.PRIMARY),
                         shape = RoundedCornerShape(
                             topStart = 0.dp, topEnd = 0.dp,
                             bottomStart = 16.dp, bottomEnd = 16.dp
@@ -207,7 +208,7 @@ class CreateRoomFragment : Fragment() {
             ) {
                 Text(
                     text = category.title,
-                    color = Color.DarkGray,
+                    color = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY),
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center
                 )
@@ -224,12 +225,21 @@ class CreateRoomFragment : Fragment() {
         Text(
             text = title,
             fontSize = 18.sp,
+            color = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY)
         )
         TextField(
             modifier = Modifier
                 .padding(top = 4.dp)
                 .fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
             value = textFieldText.value,
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY),
+                backgroundColor = themeManager.getColor(colorType = ColorType.INPUT),
+                cursorColor = themeManager.getColor(colorType = ColorType.PRIMARY),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
             onValueChange = { newText ->
                 textFieldText.value = newText
                 onTextEntered(newText)

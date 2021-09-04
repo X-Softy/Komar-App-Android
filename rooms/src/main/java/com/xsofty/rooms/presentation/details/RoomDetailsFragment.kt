@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -35,8 +37,11 @@ import com.xsofty.rooms.domain.model.entity.RoomDetailsEntity
 import com.xsofty.rooms.domain.model.entity.RoomStatus
 import com.xsofty.shared.Result
 import com.xsofty.shared.compose.Loader
+import com.xsofty.shared.compose.VerticalSpacer
 import com.xsofty.shared.firebase.FirebaseStorageManager
 import com.xsofty.shared.storage.AppPreferences
+import com.xsofty.shared.theme.ColorType
+import com.xsofty.shared.theme.ThemeManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -45,6 +50,9 @@ class RoomDetailsFragment : Fragment() {
 
     @Inject
     lateinit var appPreferences: AppPreferences
+
+    @Inject
+    lateinit var themeManager: ThemeManager
 
     private val viewModel: RoomDetailsViewModel by viewModels()
     private val args: RoomDetailsFragmentArgs by navArgs()
@@ -76,7 +84,10 @@ class RoomDetailsFragment : Fragment() {
                 RoomDetailsContent(roomDetails.data)
             }
             Result.Loading -> {
-                Loader()
+                Loader(
+                    backgroundColor = themeManager.getColor(colorType = ColorType.BACKGROUND),
+                    loaderColor = themeManager.getColor(colorType = ColorType.QUATERNARY)
+                )
             }
             is Result.Error -> {
             }
@@ -97,15 +108,17 @@ class RoomDetailsFragment : Fragment() {
     ) {
         Column(
             modifier = Modifier
-                .padding(top = 16.dp)
+                .background(color = themeManager.getColor(colorType = ColorType.BACKGROUND))
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            VerticalSpacer()
             CategoryWithButton(roomDetails.category) { status ->
                 if (status == RoomStatus.INACTIVE) {
-                    // Go Back
+                    // TODO
                 } else {
                     viewModel.changeRoomStatus(roomDetails.id, status)
                 }
@@ -115,7 +128,7 @@ class RoomDetailsFragment : Fragment() {
                 text = stringResource(R.string.room_comments),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color.Black
+                color = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY)
             )
 
             when (val comments = viewModel.comments.value) {
@@ -124,12 +137,12 @@ class RoomDetailsFragment : Fragment() {
                         Column(
                             modifier = Modifier
                                 .background(
-                                    color = Color.LightGray,
+                                    color = themeManager.getColor(colorType = ColorType.PRIMARY),
                                     shape = RoundedCornerShape(16.dp)
                                 )
                                 .border(
                                     width = 2.dp,
-                                    color = Color.DarkGray,
+                                    color = themeManager.getColor(colorType = ColorType.TERTIARY),
                                     shape = RoundedCornerShape(16.dp)
                                 )
                         ) {
@@ -157,6 +170,7 @@ class RoomDetailsFragment : Fragment() {
                     text = it
                 )
             }
+            VerticalSpacer()
         }
     }
 
@@ -174,10 +188,10 @@ class RoomDetailsFragment : Fragment() {
             contentAlignment = Alignment.BottomEnd,
             modifier = Modifier
                 .background(
-                    color = Color.Blue,
+                    color = themeManager.getColor(colorType = ColorType.PRIMARY),
                     shape = RoundedCornerShape(16.dp)
                 )
-                .height(180.dp)
+                .height(192.dp)
                 .fillMaxWidth()
         ) {
             Image(
@@ -202,16 +216,11 @@ class RoomDetailsFragment : Fragment() {
             is Result.Success -> {
                 Box(
                     modifier = Modifier
-                        .padding(16.dp)
-                        .width(120.dp)
-                        .height(50.dp)
+                        .padding(8.dp)
+                        .width(128.dp)
+                        .height(44.dp)
                         .background(
-                            color = when (newStatus.data) {
-                                RoomStatus.CREATOR -> Color.Red
-                                RoomStatus.JOINED -> Color.LightGray.copy(alpha = 0.5f)
-                                RoomStatus.NOT_JOINED -> Color.Green
-                                RoomStatus.INACTIVE -> Color.LightGray //TODO
-                            },
+                            color = getUserButtonColor(newStatus.data),
                             shape = RoundedCornerShape(16.dp)
                         )
                         .border(
@@ -247,22 +256,23 @@ class RoomDetailsFragment : Fragment() {
         description: String
     ) {
         Column(
-            modifier = Modifier.padding(4.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
                 text = title,
-                fontSize = 24.sp
+                fontSize = 24.sp,
+                color = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY)
             )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = Color.LightGray,
+                        color = themeManager.getColor(colorType = ColorType.SECONDARY),
                         shape = RoundedCornerShape(16.dp)
                     )
                     .border(
                         width = 2.dp,
-                        color = Color.DarkGray,
+                        color = themeManager.getColor(colorType = ColorType.TERTIARY),
                         shape = RoundedCornerShape(16.dp)
                     )
             ) {
@@ -270,17 +280,17 @@ class RoomDetailsFragment : Fragment() {
                     text = stringResource(R.string.room_description),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color.Black,
+                    color = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY),
                     modifier = Modifier.padding(
-                        top = 8.dp, bottom = 0.dp,
-                        start = 8.dp, end = 8.dp
+                        top = 12.dp, bottom = 12.dp,
+                        start = 12.dp, end = 12.dp
                     )
                 )
                 Text(
                     text = description,
                     fontSize = 12.sp,
-                    color = Color.DarkGray,
-                    modifier = Modifier.padding(8.dp),
+                    color = themeManager.getColor(colorType = ColorType.TEXT_SECONDARY),
+                    modifier = Modifier.padding(12.dp),
                 )
             }
         }
@@ -297,45 +307,54 @@ class RoomDetailsFragment : Fragment() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp)
-                .padding(vertical = 8.dp)
+                .height(60.dp)
                 .background(
-                    color = Color.DarkGray,
+                    color = themeManager.getColor(colorType = ColorType.PRIMARY),
                     shape = RoundedCornerShape(16.dp)
                 )
                 .border(
                     width = 1.dp,
-                    color = Color.Black,
+                    color = themeManager.getColor(colorType = ColorType.TERTIARY),
                     shape = RoundedCornerShape(16.dp)
                 ),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            BasicTextField(
+            TextField(
                 value = textFieldText.value,
                 onValueChange = { textFieldText.value = it },
-                singleLine = true,
                 modifier = Modifier
-                    .weight(0.8f)
-                    .padding(2.dp)
+                    .weight(0.85f)
+                    .padding(4.dp)
                     .fillMaxHeight()
-                    .fillMaxWidth()
-                    .background(
-                        color = Color.LightGray,
-                        shape = RoundedCornerShape(16.dp)
-                    )
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY),
+                    backgroundColor = themeManager.getColor(colorType = ColorType.SECONDARY),
+                    cursorColor = themeManager.getColor(colorType = ColorType.PRIMARY),
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                singleLine = true,
+                shape = RoundedCornerShape(16.dp),
             )
             Box(
                 modifier = Modifier
-                    .weight(0.2f)
-                    .padding(start = 0.dp, top = 2.dp, end = 2.dp, bottom = 2.dp)
+                    .weight(0.15f)
+                    .padding(start = 0.dp, top = 4.dp, end = 4.dp, bottom = 4.dp)
                     .fillMaxHeight()
                     .background(
-                        color = if (isEnabled) Color.Green else Color.LightGray,
+                        color = if (isEnabled) {
+                            themeManager.getColor(colorType = ColorType.TERTIARY)
+                        } else {
+                            themeManager.getColor(colorType = ColorType.NATIVE_BUTTON_DISABLED)
+                        },
                         shape = RoundedCornerShape(16.dp)
                     )
                     .clickable {
-                        onCommentAdded(textFieldText.value)
-                        textFieldText.value = ""
+                        if (isEnabled && textFieldText.value.isNotBlank()) {
+                            onCommentAdded(textFieldText.value)
+                            textFieldText.value = ""
+                        }
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -343,8 +362,8 @@ class RoomDetailsFragment : Fragment() {
                     painter = painterResource(id = R.drawable.chevron),
                     contentDescription = null,
                     modifier = Modifier
-                        .width(16.dp)
-                        .height(16.dp)
+                        .width(32.dp)
+                        .height(32.dp)
                 )
             }
         }
@@ -354,15 +373,15 @@ class RoomDetailsFragment : Fragment() {
     private fun CommentListItem(comment: CommentEntity) {
         Column(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(12.dp)
                 .fillMaxWidth()
-                .border(
-                    width = 2.dp,
-                    color = Color.DarkGray,
+                .background(
+                    color = themeManager.getColor(colorType = ColorType.SECONDARY),
                     shape = RoundedCornerShape(16.dp)
                 )
-                .background(
-                    color = Color.LightGray,
+                .border(
+                    width = 2.dp,
+                    color = themeManager.getColor(colorType = ColorType.TERTIARY),
                     shape = RoundedCornerShape(16.dp)
                 )
         ) {
@@ -370,18 +389,26 @@ class RoomDetailsFragment : Fragment() {
                 text = comment.userId,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color.DarkGray,
-                modifier = Modifier.padding(4.dp),
+                color = themeManager.getColor(colorType = ColorType.TEXT_SECONDARY),
+                modifier = Modifier.padding(12.dp),
             )
             Text(
                 text = comment.text,
                 fontSize = 14.sp,
-                color = Color.Black,
+                color = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY),
                 modifier = Modifier.padding(
-                    top = 0.dp, bottom = 4.dp,
-                    start = 4.dp, end = 4.dp
+                    top = 0.dp, bottom = 12.dp,
+                    start = 12.dp, end = 12.dp
                 )
             )
+        }
+    }
+
+    private fun getUserButtonColor(roomStatus: RoomStatus): Color {
+        return when (roomStatus) {
+            RoomStatus.CREATOR -> Color(0xFFfe3c30)
+            RoomStatus.JOINED -> Color(0xFF37c45b)
+            else -> Color.LightGray.copy(alpha = 0.5f)
         }
     }
 }

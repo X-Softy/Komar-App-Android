@@ -2,6 +2,9 @@ package com.xsofty.komarista
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -18,8 +21,15 @@ import com.xsofty.komarista.helper.FirebaseAuthHelper.Companion.RC_SIGN_IN
 import com.xsofty.shared.nav.CustomBackPressable
 import com.xsofty.shared.nav.contracts.CategoriesNavContract
 import com.xsofty.shared.storage.AppPreferences
+import com.xsofty.shared.theme.ThemeManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import android.widget.Toolbar
+import android.widget.TextView
+import android.widget.Toast
+import com.xsofty.shared.theme.ColorType
+import timber.log.Timber
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), AuthResultListener {
@@ -27,14 +37,17 @@ class MainActivity : AppCompatActivity(), AuthResultListener {
     @Inject
     lateinit var appPreferences: AppPreferences
 
-    private val authHelper by lazy {
-        FirebaseAuthHelper(this, appPreferences)
-    }
-
     @Inject
     lateinit var categoriesNavContract: CategoriesNavContract
 
+    @Inject
+    lateinit var themeManager: ThemeManager
+
     private lateinit var bottomNavView: BottomNavigationView
+
+    private val authHelper by lazy {
+        FirebaseAuthHelper(this, appPreferences)
+    }
 
     private val navController by lazy { findNavController(R.id.nav_host) }
 
@@ -42,8 +55,15 @@ class MainActivity : AppCompatActivity(), AuthResultListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        actionBar?.setBackgroundDrawable(ColorDrawable(themeManager.primaryColorId))
+
         FirebaseApp.initializeApp(this)
         setupNavigation()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        finish()
     }
 
     override fun onDestroy() {

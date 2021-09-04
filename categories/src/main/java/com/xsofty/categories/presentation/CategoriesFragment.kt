@@ -19,10 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
@@ -33,6 +31,7 @@ import com.xsofty.categories.domain.model.entity.CategoryEntity
 import com.xsofty.shared.Result
 import com.xsofty.shared.compose.Loader
 import com.xsofty.shared.compose.NavBarSpacer
+import com.xsofty.shared.compose.VerticalSpacer
 import com.xsofty.shared.firebase.FirebaseStorageManager
 import com.xsofty.shared.nav.CustomBackPressable
 import com.xsofty.shared.nav.contracts.RoomsNavContract
@@ -81,7 +80,10 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
                 CategoriesContent(categories.data)
             }
             Result.Loading -> {
-                Loader()
+                Loader(
+                    backgroundColor = themeManager.getColor(colorType = ColorType.BACKGROUND),
+                    loaderColor = themeManager.getColor(colorType = ColorType.QUATERNARY)
+                )
             }
             is Result.Error -> {
             }
@@ -93,11 +95,12 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
-                .padding(top = 16.dp)
+                .background(color = themeManager.getColor(colorType = ColorType.BACKGROUND))
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
+            item { VerticalSpacer() }
             items(categories.size + 1) { index ->
                 if (index < categories.size) {
                     CategoryListItem(category = categories[index]) { category ->
@@ -124,10 +127,10 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
             contentAlignment = Alignment.BottomCenter,
             modifier = Modifier
                 .background(
-                    color = Color.Black,
+                    color = themeManager.getColor(colorType = ColorType.SECONDARY),
                     shape = RoundedCornerShape(16.dp)
                 )
-                .height(160.dp)
+                .height(190.dp)
                 .fillMaxWidth()
                 .border(
                     width = 1.dp,
@@ -168,6 +171,7 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
                 )
                 Text(
                     text = category.title,
+                    color = themeManager.getColor(colorType = ColorType.TEXT_PRIMARY),
                     fontSize = 20.sp,
                 )
             }

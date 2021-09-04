@@ -9,6 +9,24 @@
     <color name="secondary_light">#F2E9E4</color>
     <color name="secondary_dark">#22223B</color>
 
-    <color name="tertiary_light">#F2E9E4</color>
+    <color name="tertiary_light">#9A8C98</color>
     <color name="tertiary_dark">#9A8C98</color>
+
+    <color name="on_primary_light">@android:color/black</color>
+    <color name="on_primary_dark">@android:color/white</color>
+
+    <color name="on_secondary_light">#877f7d</color>
+    <color name="on_secondary_dark">#9793aa</color>
+
+    <color name="input_light">@android:color/white</color>
+    <color name="input_dark">#1B1C1E</color>
+
+    <color name="native_button_disabled">#2c2c2e</color>
+    <color name="native_button_enabled">#e5e2e9</color>
+
+    <color name="background_light">@android:color/white</color>
+    <color name="background_dark">@android:color/black</color>
+
+    <color name="background_secondary_light">#F2EFF6</color>
+    <color name="background_secondary_dark">@android:color/black</color>
 </resources>
