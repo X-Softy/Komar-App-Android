@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -29,9 +30,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import coil.compose.rememberImagePainter
 import com.xsofty.categories.domain.model.entity.CategoryEntity
+import com.xsofty.rooms.R
 import com.xsofty.shared.Result
 import com.xsofty.shared.compose.Loader
 import com.xsofty.shared.compose.VerticalSpacer
+import com.xsofty.shared.ext.displayToast
 import com.xsofty.shared.firebase.FirebaseStorageManager
 import com.xsofty.shared.theme.ColorType
 import com.xsofty.shared.theme.ThemeManager
@@ -65,7 +68,7 @@ class CreateRoomFragment : Fragment() {
                         )
                     }
                     is Result.Error -> {
-
+                        displayToast(context.getString(R.string.categories_error))
                     }
                 }
             }
@@ -99,10 +102,10 @@ class CreateRoomFragment : Fragment() {
                     chosenCategoryId = it.id
                 }
             )
-            TitleAndInput(title = "TITLE") { title ->
+            TitleAndInput(title = stringResource(R.string.create_room_header_title)) { title ->
                 titleText = title
             }
-            TitleAndInput(title = "DESCRIPTION") { description ->
+            TitleAndInput(title = stringResource(R.string.create_room_header_description)) { description ->
                 descriptionText = description
             }
             TextButton(

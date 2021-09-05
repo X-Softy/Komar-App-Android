@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">categories</string>
+    <string name="categories_error">Couldn\'t fetch categories</string>
 </resources>

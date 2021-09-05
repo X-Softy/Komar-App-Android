@@ -24,7 +24,7 @@ class CreateRoomViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val createRoomRequestFlow = MutableSharedFlow<CreateRoomParams>(extraBufferCapacity = 1)
-    val createRoomStatus: MutableState<Result<Unit>> = mutableStateOf(Result.Loading)
+    private val createRoomStatus: MutableState<Result<Unit>> = mutableStateOf(Result.Loading)
 
     private val categoriesRequestFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val categories: MutableState<Result<List<CategoryEntity>>> = mutableStateOf(Result.Loading)

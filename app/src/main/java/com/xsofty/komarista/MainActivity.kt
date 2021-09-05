@@ -117,16 +117,14 @@ class MainActivity : AppCompatActivity(), AuthResultListener {
     }
 
     override fun onAuthFailed() {
+        Toast.makeText(this, getString(R.string.auth_failed), Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     override fun signOut() {
         authHelper.signOut()
         finish()
     }
-
-//    override fun onBackPressed() {
-//        (getDisplayedFragment() as? CustomBackPressable)?.onBackPressed() ?: super.onBackPressed()
-//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -143,10 +141,5 @@ class MainActivity : AppCompatActivity(), AuthResultListener {
 
     private fun navigateToCategories() {
         categoriesNavContract.show(navController)
-    }
-
-    private fun getDisplayedFragment(): Fragment? {
-        val fragmentContainer = supportFragmentManager.findFragmentById(R.id.nav_host)
-        return fragmentContainer?.childFragmentManager?.fragments?.first()
     }
 }

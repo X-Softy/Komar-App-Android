@@ -4,4 +4,15 @@
     <string name="room_delete">Delete</string>
     <string name="room_join">Join</string>
     <string name="room_unjoin">Unjoin</string>
+    <string name="create_room_header_title">TITLE</string>
+    <string name="create_room_header_description">DESCRIPTION</string>
+    <string name="categories_error">Couldn\'t fetch categories</string>
+    <string name="comment_add_error">Couldn\'t add comment</string>
+    <string name="room_details_error">Couldn\'t fetch room details</string>
+    <string name="go_back">Go Back</string>
+    <string name="create_room">Create Room</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="signing_out">Signing out...</string>
+    <string name="rooms_error">Couldn\'t fetch rooms</string>
+    <string name="room_status_error">Api error, please try again</string>
 </resources>

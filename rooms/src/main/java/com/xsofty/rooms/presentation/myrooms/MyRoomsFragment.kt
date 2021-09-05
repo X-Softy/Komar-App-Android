@@ -15,10 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.xsofty.rooms.R
 import com.xsofty.rooms.domain.model.entity.RoomEntity
 import com.xsofty.rooms.presentation.compose.RoomListItem
 import com.xsofty.shared.Result
@@ -83,6 +85,7 @@ class MyRoomsFragment : Fragment(), CustomBackPressable {
                 )
             }
             is Result.Error -> {
+                displayToast(stringResource(id = R.string.rooms_error))
             }
         }
     }
@@ -124,10 +127,10 @@ class MyRoomsFragment : Fragment(), CustomBackPressable {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            MyRoomsButton(buttonText = "Create Room") {
+            MyRoomsButton(buttonText = stringResource(R.string.create_room)) {
                 navigateToCreateRoom()
             }
-            MyRoomsButton(buttonText = "Sign Out") {
+            MyRoomsButton(buttonText = stringResource(R.string.sign_out)) {
                 signOut()
             }
         }
@@ -170,7 +173,7 @@ class MyRoomsFragment : Fragment(), CustomBackPressable {
     }
 
     private fun signOut() {
-        displayToast("Signing out...")
+        displayToast(getString(R.string.signing_out))
         Handler(Looper.getMainLooper()).postDelayed({
             (requireActivity() as AuthResultListener).signOut()
         }, 2000L)

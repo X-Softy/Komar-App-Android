@@ -37,6 +37,7 @@ import com.xsofty.rooms.domain.model.entity.RoomStatus
 import com.xsofty.shared.Result
 import com.xsofty.shared.compose.Loader
 import com.xsofty.shared.compose.VerticalSpacer
+import com.xsofty.shared.ext.displayToast
 import com.xsofty.shared.firebase.FirebaseStorageManager
 import com.xsofty.shared.storage.AppPreferences
 import com.xsofty.shared.theme.ColorType
@@ -89,6 +90,7 @@ class RoomDetailsFragment : Fragment() {
                 )
             }
             is Result.Error -> {
+                displayToast(stringResource(R.string.room_details_error))
             }
         }
         when (viewModel.addCommentStatus.value) {
@@ -96,7 +98,6 @@ class RoomDetailsFragment : Fragment() {
                 viewModel.requestComments(args.roomId)
             }
             else -> {
-                // Could not add comment
             }
         }
     }
@@ -241,14 +242,14 @@ class RoomDetailsFragment : Fragment() {
                             RoomStatus.CREATOR -> stringResource(id = R.string.room_delete)
                             RoomStatus.JOINED -> stringResource(id = R.string.room_unjoin)
                             RoomStatus.NOT_JOINED -> stringResource(id = R.string.room_join)
-                            RoomStatus.INACTIVE -> "Go Back"
+                            RoomStatus.INACTIVE -> stringResource(id = R.string.go_back)
                         },
                         color = Color.White
                     )
                 }
             }
             is Result.Error -> {
-
+                displayToast(stringResource(R.string.room_status_error))
             }
         }
     }
