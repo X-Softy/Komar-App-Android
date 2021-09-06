@@ -80,7 +80,7 @@ class CategoriesFragment : Fragment(), CustomBackPressable {
     private fun CategoriesView() {
         when (val categories = viewModel.categories.value) {
             is Result.Success -> {
-                CategoriesContent(categories.data)
+                CategoriesContent(categories.data.sortedBy { it.title })
             }
             Result.Loading -> {
                 Loader(

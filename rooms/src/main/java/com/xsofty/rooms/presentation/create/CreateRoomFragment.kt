@@ -59,7 +59,7 @@ class CreateRoomFragment : Fragment() {
             setContent {
                 when (val categories = viewModel.categories.value) {
                     is Result.Success -> {
-                        CreateRoomContent(categories.data)
+                        CreateRoomContent(categories.data.sortedBy { it.title })
                     }
                     Result.Loading -> {
                         Loader(
